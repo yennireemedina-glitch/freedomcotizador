@@ -54,6 +54,9 @@
       </div>
 
       <div class="flex items-center gap-2 flex-wrap">
+        <button onclick="toggleAppLanguage()" id="btn-lang-toggle" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-3 py-2 rounded-xl text-xs shadow transition flex items-center gap-1.5" title="Cambiar Idioma Español / English">
+          <i class="fa-solid fa-earth-americas"></i> <span id="lang-label-text">ES | EN</span>
+        </button>
         <button onclick="openAgentModal()" class="bg-white/20 hover:bg-white/30 text-white font-bold px-3.5 py-2 rounded-xl text-xs backdrop-blur-sm transition flex items-center gap-1.5">
           <i class="fa-solid fa-user-gear"></i> <span id="header-agent-name">Perfil Agente</span>
         </button>
@@ -112,16 +115,16 @@
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3.5">
         <div>
-          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Edad del Titular</label>
+          <label id="lbl-age" class="block text-xs font-bold uppercase text-slate-500 mb-1">Edad del Titular</label>
           <div class="relative">
-            <input type="number" id="input-age" value="35" min="18" max="84" oninput="renderPlans()"
+            <input type="number" id="input-age" value="35" min="18" max="99" oninput="renderPlans()"
               class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 focus:border-brandGreen focus:ring-2 focus:ring-emerald-100 font-bold text-brandBlue text-base outline-none">
             <i class="fa-solid fa-user-clock absolute left-3 top-3.5 text-slate-400"></i>
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Sexo</label>
+          <label id="lbl-gender" class="block text-xs font-bold uppercase text-slate-500 mb-1">Sexo</label>
           <select id="input-gender" onchange="renderPlans()"
             class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-brandGreen focus:ring-2 focus:ring-emerald-100 font-semibold text-slate-700 outline-none">
             <option value="F">Femenino</option>
@@ -130,7 +133,7 @@
         </div>
 
         <div>
-          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Grupo Familiar</label>
+          <label id="lbl-tier" class="block text-xs font-bold uppercase text-slate-500 mb-1">Grupo Familiar</label>
           <select id="input-tier" onchange="renderPlans()"
             class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-brandGreen focus:ring-2 focus:ring-emerald-100 font-semibold text-brandBlue outline-none">
             <option value="emp">Titular (Solo)</option>
@@ -141,7 +144,7 @@
         </div>
 
         <div>
-          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Compañía / Categoría</label>
+          <label id="lbl-network" class="block text-xs font-bold uppercase text-slate-500 mb-1">Compañía / Categoría</label>
           <select id="input-network" onchange="renderPlans()"
             class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-brandGreen focus:ring-2 focus:ring-emerald-100 font-semibold text-slate-700 outline-none">
             <option value="ALL">Todas las Compañías</option>
@@ -155,7 +158,7 @@
         </div>
 
         <div class="lg:col-span-2">
-          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Buscador de Beneficio o Plan</label>
+          <label id="lbl-search" class="block text-xs font-bold uppercase text-slate-500 mb-1">Buscador de Beneficio o Plan</label>
           <div class="relative">
             <input type="text" id="input-search" placeholder="Ej. Suncare, Maternidad, Essentials, Value, Advantage..." oninput="renderPlans()"
               class="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 focus:border-brandGreen focus:ring-2 focus:ring-emerald-100 text-sm outline-none font-medium">
@@ -164,192 +167,206 @@
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t border-slate-100 text-xs">
-        <span class="font-bold text-slate-400 uppercase text-[10px]">Clasificación Oficial:</span>
-        <button onclick="setQuickFilter('ALL')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 font-semibold text-slate-700 transition">Ver Todo (52)</button>
-        <button onclick="setQuickFilter('SUNCARE')" class="px-3 py-1 rounded-lg bg-amber-100 hover:bg-amber-200 font-extrabold text-amber-900 border border-amber-300 transition"><i class="fa-solid fa-sun mr-1 text-amber-600"></i> Suncare • BMI-PHCS (8 Planes)</button>
-        <button onclick="setQuickFilter('UHC')" class="px-2.5 py-1 rounded-lg bg-sky-100 hover:bg-sky-200 font-extrabold text-brandBlue transition">UHC / Golden Rule (16)</button>
-        <button onclick="setQuickFilter('SUPP')" class="px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 font-semibold text-purple-800 transition">ManhattanLife (14)</button>
-        <button onclick="setQuickFilter('DISC')" class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 font-semibold text-brandDarkGreen transition">Membresías (14)</button>
-        <button onclick="setQuickFilter('MAT')" class="px-2.5 py-1 rounded-lg bg-pink-50 hover:bg-pink-100 font-semibold text-pink-700 transition">Con Maternidad</button>
-        <button onclick="setQuickFilter('ZERODED')" class="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 font-semibold text-brandBlue transition">$0 Deducible</button>
-      </div>
-    </section>
-
-    <!-- SELECTOR ESPECÍFICO SUNCARE (BMI - PHCS) -->
-    <section id="suncare-selector-box" class="bg-gradient-to-r from-brandBlue via-sky-900 to-emerald-900 text-white rounded-2xl p-5 mb-6 shadow-md">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-white/15 pb-4 mb-4">
-        <div>
-          <span class="text-[10px] uppercase tracking-wider font-extrabold text-amber-300 block">Compañía Suncare • Enroll Prime BMI • Red Nacional PHCS PPO (50 Estados)</span>
-          <h3 class="text-base font-black">Portafolio Oficial Suncare (8 Planes: MEC, DVP Essentials y MVP)</h3>
-          <p class="text-xs text-sky-100 mt-0.5">Administrado por MBA Employee Benefits (TPA Payor ID: 52682) • Telemedicina $0 Ilimitada • Sin Referidos para Especialistas</p>
+      <!-- AVISO INTELIGENTE DE FILTRO POR EDAD (SENIOR 65+) -->
+      <div id="senior-age-banner" class="hidden mt-3 p-3 rounded-xl bg-amber-50 border border-amber-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+        <div class="text-amber-950 font-medium">
+          <i class="fa-solid fa-user-check text-amber-600 mr-1"></i>
+          <strong id="senior-banner-title">Filtro de Edad Activo:</strong>
+          <span id="senior-banner-desc">Mostrando únicamente los planes que aceptan la edad ingresada.</span>
         </div>
-        <select id="suncare-specific-dropdown" onchange="filterSpecificSuncare(this.value)" class="bg-white text-slate-900 font-bold px-4 py-2.5 rounded-xl text-xs outline-none shadow cursor-pointer">
-          <option value="ALL">-- Ver los 8 Planes Suncare (BMI-PHCS) --</option>
-          <option value="MEC Options">Opciones MEC ($0 Deducible: MEC Classic y MEC Choice)</option>
-          <option value="DVP Options">Opciones DVP (Con Deducible: Essentials 7500, 5000 y 2500)</option>
-          <option value="MVP Options">Opciones MVP ($0 Deducible + Hospital: Basic, Value y Advantage)</option>
-        </select>
-      </div>
-      <div class="flex flex-wrap gap-2 text-xs">
-        <button onclick="filterSpecificSuncare('ALL')" class="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 font-bold transition">Todos los 8 Planes Suncare</button>
-        <button onclick="filterSpecificSuncare('MEC Options')" class="px-3 py-1.5 rounded-lg bg-cyan-400 hover:bg-cyan-500 text-slate-950 font-extrabold transition">MEC Classic & Choice (2)</button>
-        <button onclick="filterSpecificSuncare('DVP Options')" class="px-3 py-1.5 rounded-lg bg-lime-400 hover:bg-lime-500 text-slate-950 font-extrabold transition">DVP Essentials 7500 / 5000 / 2500 (3)</button>
-        <button onclick="filterSpecificSuncare('MVP Options')" class="px-3 py-1.5 rounded-lg bg-purple-400 hover:bg-purple-500 text-slate-950 font-extrabold transition">MVP Basic / Value / Advantage (3)</button>
-      </div>
-    </section>
-
-    <!-- SELECTOR ESPECÍFICO UHC -->
-    <section id="uhc-selector-box" class="hidden bg-gradient-to-r from-blue-950 via-brandBlue to-sky-800 text-white rounded-2xl p-5 mb-6 shadow-md">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-white/15 pb-4 mb-4">
-        <div>
-          <span class="text-[10px] uppercase tracking-wider font-extrabold text-sky-300 block">Portafolio UnitedHealthcare • Golden Rule Insurance Company</span>
-          <h3 class="text-base font-black">Catálogo Oficial UHC (16 Planes • Tarifas Sujetas a ZIP Code)</h3>
-          <p class="text-xs text-sky-100 mt-0.5">Modo Catálogo Oficial: Cotiza según el ZIP Code del cliente en el portal UHC e ingresa el monto en la tarjeta para comparar o enviar propuesta.</p>
-        </div>
-        <select id="uhc-specific-dropdown" onchange="filterSpecificUHC(this.value)" class="bg-white text-slate-900 font-bold px-4 py-2.5 rounded-xl text-xs outline-none shadow cursor-pointer">
-          <option value="ALL">-- Ver Todos los Planes UHC (16 Planes) --</option>
-          <option value="TriTerm Medical">TriTerm Medical (4 Planes)</option>
-          <option value="Health ProtectorGuard">Health ProtectorGuard (5 Planes)</option>
-          <option value="Hospital SafeGuard GI">Hospital SafeGuard GI (4 Planes)</option>
-          <option value="HospitalWise">HospitalWise (3 Planes)</option>
-        </select>
-      </div>
-      <div class="flex flex-wrap gap-2 text-xs">
-        <button onclick="filterSpecificUHC('ALL')" class="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 font-bold transition">Todos UHC (16)</button>
-        <button onclick="filterSpecificUHC('TriTerm Medical')" class="px-3 py-1.5 rounded-lg bg-sky-400 hover:bg-sky-500 text-slate-950 font-extrabold transition">TriTerm Medical (4)</button>
-        <button onclick="filterSpecificUHC('Health ProtectorGuard')" class="px-3 py-1.5 rounded-lg bg-emerald-400 hover:bg-emerald-500 text-slate-950 font-extrabold transition">Health ProtectorGuard (5)</button>
-        <button onclick="filterSpecificUHC('Hospital SafeGuard GI')" class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold transition">Hospital SafeGuard GI (4)</button>
-        <button onclick="filterSpecificUHC('HospitalWise')" class="px-3 py-1.5 rounded-lg bg-purple-300 hover:bg-purple-400 text-slate-950 font-extrabold transition">HospitalWise (3)</button>
-      </div>
-    </section>
-
-    <!-- SELECTOR ESPECÍFICO SUPLEMENTARIOS -->
-    <section id="supp-selector-box" class="hidden bg-gradient-to-r from-purple-900 via-brandBlue to-slate-900 text-white rounded-2xl p-4 mb-6 shadow-md">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-3">
-        <div>
-          <span class="text-[10px] uppercase tracking-wider font-extrabold text-purple-300 block">Línea ManhattanLife</span>
-          <h3 class="text-sm font-bold">Seleccionar Plan Suplementario Específico</h3>
-        </div>
-        <select id="supp-specific-dropdown" onchange="filterSpecificSupplement(this.value)" class="bg-white text-slate-900 font-bold px-4 py-2.5 rounded-xl text-xs outline-none shadow cursor-pointer">
-          <option value="ALL">-- Ver Todos los Suplementarios ManhattanLife (14 Planes) --</option>
-          <option value="Affordable Choice">Affordable Choice (Classic, Elite, Classic Plus, Elite Plus)</option>
-          <option value="Out-of-Pocket Protection">Out-of-Pocket Protection Plan ($2,500, $5,000 y $6,350 + $100/$200 día)</option>
-          <option value="Accident 24-Hr">Accident 24-Hr (1 y 2 Unidades)</option>
-          <option value="Cancer Care Plus">Cancer Care Plus (Plan 1 y Plan 2)</option>
-          <option value="Suma Global">Suma Global: Cáncer y Corazón/Stroke ($25k)</option>
-          <option value="Hospital Indemnity">Hospital Indemnity Select</option>
-        </select>
-      </div>
-    </section>
-
-    <!-- SELECTOR ESPECÍFICO DESCUENTOS -->
-    <section id="disc-selector-box" class="hidden bg-gradient-to-r from-emerald-900 via-teal-800 to-brandBlue text-white rounded-2xl p-5 mb-6 shadow-md">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-white/15 pb-4 mb-4">
-        <div>
-          <span class="text-[10px] uppercase tracking-wider font-extrabold text-emerald-300 block">Membresías y Descuentos (Sin Límite de Edad ni Preexistencias)</span>
-          <h3 class="text-base font-black">KonnectMD (7 Planes) + Sun Health & Dental (4 Planes) + New Benefits (3 Planes: Basic, Standard y Premium)</h3>
-        </div>
-        <select id="disc-specific-dropdown" onchange="filterSpecificDiscount(this.value)" class="bg-white text-slate-900 font-bold px-4 py-2.5 rounded-xl text-xs outline-none shadow cursor-pointer">
-          <option value="ALL">-- Ver Todas las Opciones de Descuento (14 Planes) --</option>
-          <option value="KonnectMD">Solo Planes KonnectMD (Plata, Oro, Platino, Titanio + 3 Empresariales)</option>
-          <option value="Sun Health & Dental">Solo Planes Sun Health & Dental (Básico, +Quest Lab, +Dental, Dental/Visión)</option>
-          <option value="New Benefits">Solo Planes New Benefits ($25 Basic, $40 Standard y $60 Premium)</option>
-        </select>
-      </div>
-      <div class="flex flex-wrap gap-2 text-xs">
-        <button onclick="filterSpecificDiscount('ALL')" class="px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 font-bold transition">Ver Todos los Descuentos (14)</button>
-        <button onclick="filterSpecificDiscount('KonnectMD')" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold transition"><i class="fa-solid fa-laptop-medical mr-1"></i> Todos los KonnectMD (7)</button>
-        <button onclick="filterSpecificDiscount('Sun Health & Dental')" class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold transition"><i class="fa-solid fa-sun mr-1"></i> Todos los Sun Health (4)</button>
-        <button onclick="filterSpecificDiscount('New Benefits')" class="px-3 py-1.5 rounded-lg bg-sky-400 hover:bg-sky-500 text-slate-950 font-extrabold transition"><i class="fa-solid fa-heart-pulse mr-1"></i> New Benefits (3: Basic, Standard, Premium)</button>
-      </div>
-    </section>
-
-    <!-- ASISTENTE DE IA INTERNO -->
-    <section id="ai-assistant-section" class="hidden bg-white rounded-2xl shadow-md border border-slate-200 p-6 mb-6">
-      <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
-        <div>
-          <span class="text-[10px] uppercase font-extrabold tracking-wider text-amber-600 block">Soporte y Consultas en Llamada (Con Base en los Brochures Cloud)</span>
-          <h2 class="text-base font-extrabold text-brandBlue flex items-center gap-2">
-            <i class="fa-solid fa-robot text-brandGreen"></i> Asistente de IA (Conectado a Todos los Brochures Cloud)
-          </h2>
-        </div>
-        <button onclick="clearAIChat()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold px-3 py-1.5 rounded-lg transition">Limpiar Chat</button>
+        <button onclick="setQuickFilter('ALL')" class="shrink-0 bg-brandBlue hover:bg-brandLightBlue text-white font-extrabold px-3 py-1.5 rounded-lg text-[11px] shadow transition">
+          Ver Todos los Planes Elegibles para esta Edad
+        </button>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div class="lg:col-span-1 bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
-          <span class="text-[11px] font-bold uppercase text-slate-500 block mb-1">Consultas Rápidas:</span>
-          <button onclick="askPresetAI('¿Cuáles son los 8 planes de Suncare (BMI-PHCS), sus diferencias y precios?')" class="w-full text-left text-xs bg-white hover:bg-blue-50 text-brandBlue font-semibold p-2.5 rounded-lg border border-slate-200 transition">
-            <i class="fa-solid fa-sun mr-1.5 text-amber-500"></i> Los 8 Planes Suncare (BMI-PHCS)
+      <!-- FILTROS RÁPIDOS -->
+      <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="text-xs font-bold text-slate-400 mr-1">Filtros Rápidos:</span>
+          <button onclick="setQuickFilter('SUNCARE')" class="text-xs px-3 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-950 font-extrabold transition border border-amber-300">
+            <i class="fa-solid fa-sun text-amber-600 mr-1"></i> Suncare BMI-PHCS (8)
           </button>
-          <button onclick="askPresetAI('¿Cuáles planes de Suncare cubren Maternidad y Hospitalización con $0 deducible?')" class="w-full text-left text-xs bg-white hover:bg-blue-50 text-brandBlue font-semibold p-2.5 rounded-lg border border-slate-200 transition">
-            <i class="fa-solid fa-baby-carriage mr-1.5 text-brandGreen"></i> Suncare con Maternidad y $0 Ded
+          <button onclick="setQuickFilter('UHC')" class="text-xs px-3 py-1.5 rounded-lg bg-sky-100 hover:bg-sky-200 text-sky-900 font-bold transition border border-sky-200">
+            <i class="fa-solid fa-hospital-user mr-1"></i> UHC / Golden Rule (16)
           </button>
-          <button onclick="askPresetAI('¿Cuáles son los 16 planes de UnitedHealthcare (UHC / Golden Rule) y cómo se cotizan?')" class="w-full text-left text-xs bg-white hover:bg-blue-50 text-brandBlue font-semibold p-2.5 rounded-lg border border-slate-200 transition">
-            <i class="fa-solid fa-hospital-user mr-1.5 text-brandGreen"></i> Catálogo 16 Planes de UHC
+          <button onclick="setQuickFilter('SUPP')" class="text-xs px-3 py-1.5 rounded-lg bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold transition border border-purple-200">
+            <i class="fa-solid fa-shield-heart mr-1"></i> ManhattanLife (14)
           </button>
-          <button onclick="askPresetAI('¿Qué planes puede tener una persona de 75 años y cuáles son sus precios?')" class="w-full text-left text-xs bg-white hover:bg-blue-50 text-brandBlue font-semibold p-2.5 rounded-lg border border-slate-200 transition">
-            <i class="fa-solid fa-user-clock mr-1.5 text-brandGreen"></i> Opciones para 75 años
+          <button onclick="setQuickFilter('DISC')" class="text-xs px-3 py-1.5 rounded-lg bg-teal-100 hover:bg-teal-200 text-teal-900 font-bold transition border border-teal-200">
+            <i class="fa-solid fa-tags mr-1"></i> Membresías (14)
           </button>
-          <button onclick="askPresetAI('¿Cuáles son los precios y niveles de las Membresías KonnectMD y Sun Health?')" class="w-full text-left text-xs bg-white hover:bg-blue-50 text-brandBlue font-semibold p-2.5 rounded-lg border border-slate-200 transition">
-            <i class="fa-solid fa-laptop-medical mr-1.5 text-brandGreen"></i> Membresías KonnectMD y Sun Health
+          <button onclick="setQuickFilter('MAT')" class="text-xs px-2.5 py-1 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 font-semibold transition">
+            <i class="fa-solid fa-person-pregnant mr-1"></i> Con Maternidad
+          </button>
+          <button onclick="setQuickFilter('ZERODED')" class="text-xs px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-brandDarkGreen font-semibold transition">
+            <i class="fa-solid fa-circle-check mr-1"></i> Deducible $0
+          </button>
+          <button onclick="setQuickFilter('ALL')" class="text-xs px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold transition">
+            Ver Todos (52)
           </button>
         </div>
 
-        <div class="lg:col-span-3 flex flex-col h-[440px] bg-slate-50 rounded-xl border border-slate-200 overflow-hidden">
-          <div id="ai-chat-messages" class="flex-1 p-4 overflow-y-auto custom-scroll space-y-3 text-xs">
-            <div class="flex items-start gap-2.5">
-              <div class="w-7 h-7 rounded-full bg-brandBlue text-white flex items-center justify-center font-bold text-xs shrink-0 shadow">AI</div>
-              <div class="bg-white p-3.5 rounded-2xl rounded-tl-none shadow-sm border border-slate-200 text-slate-700 max-w-2xl leading-relaxed">
-                ¡Hola! Soy el Asistente de IA Cloud de <strong>Freedom Insurance Financial</strong>. Tengo cargados todos los brochures, edades y tarifas. Pregúntame por cualquier edad (ej. "75 años"), planes de UHC, ManhattanLife o descuentos.
-              </div>
-            </div>
+        <!-- SELECTOR SUNCARE (BMI - PHCS) -->
+        <div id="suncare-selector-box" class="w-full mt-3 pt-3 border-t border-amber-200 bg-gradient-to-r from-amber-50 via-white to-sky-50 p-3.5 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-extrabold text-brandBlue flex items-center gap-1.5">
+              <i class="fa-solid fa-sun text-amber-500"></i> Suncare (BMI - Red Nacional PHCS PPO en 50 Estados):
+            </span>
+            <p class="text-[11px] text-slate-600">8 Planes Oficiales Administrados por MBA Employee Benefits: MEC (Classic, Choice), DVP (Essentials 7500, 5000, 2500) y MVP (Basic, Value, Advantage).</p>
           </div>
-          <div class="p-3 bg-white border-t border-slate-200 flex gap-2">
-            <input type="text" id="ai-user-input" placeholder="Ej: ¿Qué planes hay para 75 años?..." onkeydown="if(event.key==='Enter') sendAImessage()"
-              class="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 text-xs outline-none focus:border-brandGreen">
-            <button onclick="sendAImessage()" class="bg-brandBlue hover:bg-brandLightBlue text-white font-bold px-5 py-2.5 rounded-xl text-xs transition shadow flex items-center gap-1.5">
-              <i class="fa-solid fa-paper-plane"></i> Consultar
-            </button>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="filterSpecificSuncare('ALL')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold bg-brandBlue text-white shadow-sm hover:bg-brandLightBlue transition">Todos Suncare (8)</button>
+            <button onclick="filterSpecificSuncare('MEC Options')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold bg-cyan-600 text-white shadow-sm hover:bg-cyan-700 transition">MEC Options (2)</button>
+            <button onclick="filterSpecificSuncare('DVP Options')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold bg-sky-600 text-white shadow-sm hover:bg-sky-700 transition">DVP Essentials (3)</button>
+            <button onclick="filterSpecificSuncare('MVP Options')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold bg-purple-700 text-white shadow-sm hover:bg-purple-800 transition">MVP Options (3)</button>
+            <select id="suncare-specific-dropdown" onchange="filterSpecificSuncare(this.value)" class="px-3 py-1.5 rounded-lg border border-amber-300 bg-white text-brandBlue font-bold text-xs outline-none">
+              <option value="ALL">-- Filtrar Línea Suncare --</option>
+              <option value="MEC Options">MEC Options (Classic y Choice)</option>
+              <option value="DVP Options">DVP Options (Essentials 7500, 5000, 2500)</option>
+              <option value="MVP Options">MVP Options (Basic, Value, Advantage)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- SELECTOR UHC -->
+        <div id="uhc-selector-box" class="hidden w-full mt-3 pt-3 border-t border-sky-200 bg-sky-50/70 p-3 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-extrabold text-sky-950 flex items-center gap-1.5">
+              <i class="fa-solid fa-hospital-user text-sky-600"></i> Línea UnitedHealthcare (Golden Rule):
+            </span>
+            <p class="text-[11px] text-sky-800">Filtra por familia de planes UHC (TriTerm Medical, Health ProtectorGuard, Hospital SafeGuard GI y HospitalWise).</p>
+          </div>
+          <select id="uhc-specific-dropdown" onchange="filterSpecificUHC(this.value)" class="w-full sm:w-auto px-3 py-2 rounded-xl border border-sky-300 bg-white text-brandBlue font-bold text-xs outline-none">
+            <option value="ALL">-- Ver Todos los 16 Planes de UHC --</option>
+            <option value="TriTerm Medical">UHC TriTerm Medical (4 Planes)</option>
+            <option value="Health ProtectorGuard">UHC Health ProtectorGuard (5 Planes)</option>
+            <option value="Hospital SafeGuard GI">UHC Hospital SafeGuard GI - Emisión Garantizada (4 Planes)</option>
+            <option value="HospitalWise">UHC HospitalWise (3 Planes)</option>
+          </select>
+        </div>
+
+        <!-- SELECTOR MANHATTANLIFE -->
+        <div id="supp-selector-box" class="hidden w-full mt-3 pt-3 border-t border-purple-100 bg-purple-50/60 p-3 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-extrabold text-purple-900 flex items-center gap-1.5">
+              <i class="fa-solid fa-layer-group text-purple-600"></i> Seleccionar Plan de ManhattanLife:
+            </span>
+            <p class="text-[11px] text-purple-700">Elige una familia de planes suplementarios para ver sus niveles y tarifas.</p>
+          </div>
+          <select id="supp-specific-dropdown" onchange="filterSpecificSupplement(this.value)" class="w-full sm:w-auto px-3 py-2 rounded-xl border border-purple-300 bg-white text-brandBlue font-bold text-xs outline-none">
+            <option value="ALL">-- Ver Todos los 14 Planes de ManhattanLife --</option>
+            <option value="Out-of-Pocket Protection">Out-of-Pocket Protection Plan ($2,500, $5,000 y $6,350 + $100 o $200/día)</option>
+            <option value="Affordable Choice">Affordable Choice (Classic, Elite, Classic Plus, Elite Plus)</option>
+            <option value="Accident 24-Hr">Enhanced 24-Hour Accident Plan (1 y 2 Unidades)</option>
+            <option value="Cancer Care Plus">Cancer Care Plus CP4000-FL (Plan 1 y Plan 2)</option>
+            <option value="Suma Global">Cáncer y Ataque Cardíaco / Stroke (Suma Global $25k)</option>
+            <option value="Hospital Indemnity">Hospital Indemnity Select (18 a 89 años)</option>
+          </select>
+        </div>
+
+        <!-- SELECTOR MEMBRESÍAS -->
+        <div id="disc-selector-box" class="hidden w-full mt-3 pt-3 border-t border-teal-200 bg-teal-50/70 p-3.5 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <span class="text-xs font-extrabold text-teal-950 flex items-center gap-1.5">
+              <i class="fa-solid fa-tags text-teal-600"></i> Membresías Médicas y Planes de Descuento:
+            </span>
+            <p class="text-[11px] text-teal-800">Sin límite de edad ni preexistencias: KonnectMD (7 planes), Sun Health & Dental (4 planes) y New Benefits (3 paquetes).</p>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="filterSpecificDiscount('ALL')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold bg-teal-700 text-white shadow-sm hover:bg-teal-800 transition">Todas (14)</button>
+            <button onclick="filterSpecificDiscount('KonnectMD')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold bg-brandBlue text-white shadow-sm hover:bg-brandLightBlue transition">Solo KonnectMD (7)</button>
+            <button onclick="filterSpecificDiscount('Sun Health & Dental')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold bg-amber-500 text-slate-950 shadow-sm hover:bg-amber-600 transition">Solo Sun Health (4)</button>
+            <button onclick="filterSpecificDiscount('New Benefits')" class="px-3 py-1.5 rounded-lg text-xs font-extrabold bg-emerald-600 text-white shadow-sm hover:bg-emerald-700 transition">New Benefits (3)</button>
+            <select id="disc-specific-dropdown" onchange="filterSpecificDiscount(this.value)" class="w-full sm:w-auto px-3 py-1.5 rounded-lg border border-teal-300 bg-white text-brandBlue font-bold text-xs outline-none">
+              <option value="ALL">-- Elegir Proveedor --</option>
+              <option value="KonnectMD">KonnectMD (Plata, Oro, Platino, Titanio + 3 Individuales)</option>
+              <option value="Sun Health & Dental">Sun Health & Dental (Health+, Quest Select, Dental Preferred)</option>
+              <option value="New Benefits">The New Benefits Solution (Basic $25, Standard $40, Premium $60)</option>
+            </select>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CONTADOR Y ORDENAMIENTO -->
-    <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
+    <!-- SECCIÓN ASISTENTE IA -->
+    <section id="ai-assistant-section" class="hidden bg-white rounded-3xl shadow-xl border-2 border-brandGreen/40 overflow-hidden mb-8">
+      <div class="bg-gradient-to-r from-brandBlue via-brandLightBlue to-brandDarkGreen text-white p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-white/15 backdrop-blur flex items-center justify-center text-2xl text-amber-300 shadow-inner">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-widest bg-amber-400/20 text-amber-200 px-2.5 py-0.5 rounded-full font-bold border border-amber-300/30">Entrenado con los 52 Planes Oficiales</span>
+            <h3 class="text-lg font-extrabold mt-0.5">Asistente IA de Planes para Agentes</h3>
+          </div>
+        </div>
+        <button onclick="clearAIChat()" class="text-xs bg-white/15 hover:bg-white/25 text-white px-3 py-1.5 rounded-xl font-semibold transition">
+          <i class="fa-solid fa-broom mr-1"></i> Limpiar Chat
+        </button>
+      </div>
+
+      <div class="p-5 bg-slate-50 border-b border-slate-200">
+        <p class="text-xs font-bold text-slate-500 uppercase mb-2"><i class="fa-solid fa-bolt text-amber-500 mr-1"></i> Preguntas Rápidas Frecuentes:</p>
+        <div class="flex flex-wrap gap-1.5">
+          <button onclick="askPresetAI('¿Cuáles son los 8 planes de Suncare BMI-PHCS, sus copagos, deducibles y precios?')" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold border border-amber-300 px-3 py-1.5 rounded-xl transition">☀️ Resumen 8 Planes Suncare (BMI-PHCS)</button>
+          <button onclick="askPresetAI('¿Qué planes cubren maternidad y cuánto cuestan?')" class="text-xs bg-white hover:bg-emerald-50 text-brandBlue border border-slate-300 px-3 py-1.5 rounded-xl font-semibold transition">🤰 Planes con Maternidad</button>
+          <button onclick="askPresetAI('¿Qué opciones y precios tenemos para una persona de 80 años?')" class="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-950 font-bold border border-emerald-300 px-3 py-1.5 rounded-xl transition">👴 Opciones para 80 años</button>
+          <button onclick="askPresetAI('¿Cuáles son los 3 paquetes de New Benefits ($25, $40 y $60)?')" class="text-xs bg-white hover:bg-emerald-50 text-brandBlue border border-slate-300 px-3 py-1.5 rounded-xl font-semibold transition">💙 New Benefits ($25 / $40 / $60)</button>
+        </div>
+      </div>
+
+      <div id="ai-chat-messages" class="p-5 space-y-3 max-h-96 overflow-y-auto custom-scroll bg-slate-50/50 text-xs">
+        <div class="flex items-start gap-2.5">
+          <div class="w-7 h-7 rounded-full bg-brandBlue text-white flex items-center justify-center font-bold text-xs shrink-0">AI</div>
+          <div class="bg-white p-3.5 rounded-2xl rounded-tl-none shadow-sm border border-slate-200 text-slate-700 leading-relaxed">
+            ¡Hola! Soy el <strong>Asistente IA de Freedom Insurance Financial</strong>. Estoy actualizado con los <strong>8 planes de Suncare (BMI-PHCS)</strong>, los <strong>16 planes de UnitedHealthcare</strong>, los <strong>14 suplementarios de ManhattanLife</strong> y las <strong>14 Membresías (KonnectMD, Sun Health & Dental y New Benefits)</strong>. ¿Qué deseas consultar?
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-white border-t border-slate-200 flex gap-2">
+        <input type="text" id="ai-user-input" placeholder="Escribe tu pregunta sobre Suncare, UHC, ManhattanLife o Membresías..."
+          onkeydown="if(event.key==='Enter') sendAImessage()"
+          class="flex-1 px-4 py-3 rounded-xl border border-slate-300 focus:border-brandGreen outline-none text-sm font-medium">
+        <button onclick="sendAImessage()" class="bg-brandGreen hover:bg-brandDarkGreen text-white font-extrabold px-5 py-3 rounded-xl text-xs shadow-md transition flex items-center gap-1.5">
+          <i class="fa-solid fa-paper-plane"></i> Preguntar
+        </button>
+      </div>
+    </section>
+
+    <!-- RESUMEN DE RESULTADOS -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
       <div id="results-summary" class="text-sm font-semibold text-slate-600"></div>
       <div class="flex items-center gap-2 text-xs">
-        <span class="text-slate-500 font-medium">Ordenar por:</span>
+        <span class="text-slate-500">Ordenar por:</span>
         <select id="sort-order" onchange="renderPlans()" class="bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 font-semibold text-brandBlue outline-none">
-          <option value="price-asc">Menor Precio Mensual</option>
-          <option value="price-desc">Mayor Precio / Cobertura</option>
-          <option value="ded-asc">Menor Deducible</option>
+          <option value="price-asc">Precio: Menor a Mayor</option>
+          <option value="price-desc">Precio: Mayor a Menor</option>
+          <option value="ded-asc">Deducible: Menor a Mayor</option>
         </select>
       </div>
     </div>
 
-    <!-- GRILLA DE PLANES -->
+    <!-- GRID DE TARJETAS -->
     <div id="plans-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
 
   </main>
 
-  <!-- BARRA DE COMPARACIÓN -->
+  <!-- BARRA INFERIOR DE COMPARACIÓN -->
   <div id="compare-bar" class="fixed bottom-0 left-0 right-0 bg-brandBlue text-white shadow-2xl border-t-4 border-brandGreen transform translate-y-full transition-transform duration-300 z-40">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
       <div class="flex items-center gap-3 flex-wrap">
-        <span class="bg-brandGreen text-white text-xs font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider">
+        <span class="bg-brandGreen text-white font-black text-xs px-2.5 py-1 rounded-lg uppercase tracking-wider">
           Comparador (<span id="compare-count">0</span>/3)
         </span>
         <div id="compare-chips" class="flex flex-wrap gap-2"></div>
       </div>
-      <div class="flex items-center gap-2">
-        <button onclick="clearCompare()" class="text-xs text-slate-300 hover:text-white px-3 py-1.5">Limpiar</button>
-        <button onclick="filterOnlySelected()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-4 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
-          <i class="fa-solid fa-filter"></i> Ver Solo estos 3 Planes
+      <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+        <button onclick="clearCompare()" class="text-xs text-slate-300 hover:text-white px-3 py-2 font-semibold">Limpiar</button>
+        <button onclick="filterOnlySelected()" id="btn-filter-selected" class="bg-white/15 hover:bg-white/25 text-white border border-white/30 font-bold px-3.5 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
+          <i class="fa-solid fa-eye"></i> Ver Solo Seleccionados
         </button>
-        <button onclick="openCompareModal()" class="bg-brandGreen hover:bg-brandDarkGreen text-white font-bold px-5 py-2 rounded-xl text-xs shadow-lg transition flex items-center gap-1.5">
+        <button onclick="openCompareModal()" class="bg-brandGreen hover:bg-brandDarkGreen text-white font-bold px-5 py-2 rounded-xl text-xs shadow-lg transition flex items-center gap-2">
           <i class="fa-solid fa-table-columns"></i> Comparar Lado a Lado
         </button>
       </div>
@@ -358,17 +375,52 @@
 
   <!-- MODAL COMPARACIÓN -->
   <div id="compare-modal" class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-200">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[92vh] flex flex-col overflow-hidden border border-slate-200">
       <div class="bg-gradient-to-r from-brandBlue to-brandLightBlue text-white px-6 py-4 flex justify-between items-center">
         <div>
           <h3 class="text-lg font-bold flex items-center gap-2">
-            <i class="fa-solid fa-scale-balanced text-brandGreen"></i> Comparativa de Planes
+            <i class="fa-solid fa-scale-balanced text-brandGreen"></i> <span id="compare-modal-heading">Comparativa Lado a Lado de Planes</span>
           </h3>
           <p id="compare-subtitle" class="text-xs text-emerald-200"></p>
         </div>
-        <button onclick="closeCompareModal()" class="text-white/80 hover:text-white text-xl px-2"><i class="fa-solid fa-xmark"></i></button>
+        <div class="flex items-center gap-2">
+          <button onclick="toggleAppLanguage()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-3 py-1.5 rounded-lg text-xs shadow transition">
+            <i class="fa-solid fa-language mr-1"></i> <span id="compare-lang-btn">Cambiar a English</span>
+          </button>
+          <button onclick="closeCompareModal()" class="text-white/80 hover:text-white text-xl px-2"><i class="fa-solid fa-xmark"></i></button>
+        </div>
       </div>
-      <div id="compare-table-container" class="p-6 overflow-auto custom-scroll"></div>
+
+      <!-- BARRA DE ENVÍO DE COMPARATIVA POR EMAIL / WHATSAPP -->
+      <div class="bg-slate-50 px-6 py-3.5 border-b border-slate-200 space-y-3 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-500 mb-0.5">Nombre del Cliente</label>
+            <input type="text" id="comp-client-name" oninput="renderCompareModalContent()" placeholder="Ej. María Rodríguez" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 font-semibold text-slate-800 outline-none focus:border-brandGreen">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-500 mb-0.5">Email del Cliente (Para Enviar Comparativa)</label>
+            <input type="email" id="comp-client-email" placeholder="cliente@correo.com" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 font-semibold text-slate-800 outline-none focus:border-brandGreen">
+          </div>
+          <div class="flex items-end gap-1.5 flex-wrap">
+            <button onclick="copyRichCompareTable()" class="bg-brandBlue hover:bg-brandLightBlue text-white font-extrabold px-3 py-2 rounded-lg text-[11px] shadow transition flex items-center gap-1">
+              <i class="fa-solid fa-table"></i> Copiar Tabla (Pegar en Email)
+            </button>
+            <button onclick="sendCompareEmailGmail()" class="bg-red-600 hover:bg-red-700 text-white font-extrabold px-3 py-2 rounded-lg text-[11px] shadow transition flex items-center gap-1">
+              <i class="fa-solid fa-envelope"></i> Enviar por Gmail
+            </button>
+            <button onclick="copyCompareWhatsApp()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3 py-2 rounded-lg text-[11px] shadow transition flex items-center gap-1">
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp
+            </button>
+            <button onclick="printCompareTable()" class="bg-slate-800 hover:bg-slate-900 text-white font-extrabold px-3 py-2 rounded-lg text-[11px] shadow transition flex items-center gap-1">
+              <i class="fa-solid fa-print"></i> PDF
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="compare-table-container" class="p-6 overflow-auto custom-scroll bg-white"></div>
+      <textarea id="compare-whatsapp-text" class="hidden"></textarea>
     </div>
   </div>
 
@@ -421,9 +473,14 @@
 
           <!-- VISTA PREVIA VISUAL CON TABLA Y COLORES (IMPRIMIBLE Y COPIABLE PARA EMAIL) -->
           <div>
-            <div class="flex items-center justify-between mb-1.5">
+            <div class="flex items-center justify-between mb-1.5 flex-wrap gap-2">
               <label class="block text-[10px] font-bold uppercase text-brandBlue">Vista Previa de Propuesta con Diseño (Tablas y Colores):</label>
-              <span class="text-[10px] text-emerald-700 font-bold"><i class="fa-solid fa-phone-volume mr-1"></i> Teléfono del agente con llamada en 1 clic activo</span>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="toggleAppLanguage()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-2.5 py-1 rounded-lg text-[10px] shadow transition">
+                  <i class="fa-solid fa-language mr-1"></i> Cambiar Idioma (ES / EN)
+                </button>
+                <span class="text-[10px] text-emerald-700 font-bold"><i class="fa-solid fa-phone-volume mr-1"></i> Teléfono click-to-call activo</span>
+              </div>
             </div>
             <div id="printable-area" class="bg-white rounded-2xl border-2 border-slate-200 overflow-hidden shadow-sm">
               <div id="prop-visual-card"></div>
@@ -550,13 +607,60 @@
                   <th class="p-3">Agente / Contacto</th>
                   <th class="p-3">Usuario</th>
                   <th class="p-3">Clave</th>
-                  <th class="p-3">Estado</th>
+                  <th class="p-3">Estado / Registro</th>
                   <th class="p-3 text-right">Acciones</th>
                 </tr>
               </thead>
               <tbody id="dir-agents-tbody"></tbody>
             </table>
           </div>
+
+          <!-- HERRAMIENTAS DE RESPALDO Y RECUPERACIÓN PERMANENTE DE AGENTES -->
+          <div class="mt-4 pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
+            <div class="text-[11px] text-slate-600">
+              <i class="fa-solid fa-database text-brandGreen mr-1"></i>
+              <strong>Memoria Permanente Activada:</strong> Los agentes no vencen a los 30 días.
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" onclick="syncCloudNow()" class="bg-sky-600 hover:bg-sky-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1">
+                <i class="fa-solid fa-cloud-arrow-down"></i> Refrescar / Sincronizar Nube Ahora
+              </button>
+              <button type="button" onclick="exportAgentsBackup()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1">
+                <i class="fa-solid fa-download"></i> Descargar Respaldo de Agentes (.JSON)
+              </button>
+              <label class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1 cursor-pointer">
+                <i class="fa-solid fa-upload"></i> Importar / Unir Agentes
+                <input type="file" accept=".json" onchange="importAgentsBackup(event)" class="hidden">
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONFIGURACIÓN CLOUD REAL-TIME PARA VERCEL -->
+        <div class="bg-sky-50/90 rounded-2xl p-5 border border-sky-200">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2">
+            <h4 class="text-sm font-extrabold text-brandBlue flex items-center gap-2">
+              <i class="fa-solid fa-cloud text-sky-600"></i> Estado de Base de Datos en la Nube (Tiempo Real 24/7)
+            </h4>
+            <span id="cloud-connection-pill" class="text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+              Verificando conexión...
+            </span>
+          </div>
+          <p class="text-xs text-slate-600 mb-3">
+            Cada vez que un agente se registra desde cualquier teléfono o computadora, se guarda de forma <strong>permanente (sin límite de 30 días)</strong> y se une automáticamente a tu lista sin borrar los anteriores.
+          </p>
+          <details class="bg-white rounded-xl border border-sky-200 p-3">
+            <summary class="text-xs font-extrabold text-brandBlue cursor-pointer select-none">
+              ⚙️ Opcional para Vercel Público: Conectar tu propio Firebase Config (Si deseas nube dedicada en tu dominio Vercel)
+            </summary>
+            <div class="mt-3 space-y-2">
+              <p class="text-[11px] text-slate-600">Si publicaste en Vercel externo y quieres conectar tu propio proyecto gratuito de <a href="https://console.firebase.google.com" target="_blank" class="text-brandLightBlue underline font-bold">Firebase Console</a>, pega aquí el JSON de <code>firebaseConfig</code> (con Firestore en modo público):</p>
+              <textarea id="custom-firebase-json" rows="3" placeholder='{"apiKey":"...","authDomain":"...","projectId":"..."}' class="w-full p-2.5 rounded-lg border border-slate-300 font-mono text-[11px]"></textarea>
+              <button type="button" onclick="saveCustomFirebaseConfig()" class="bg-brandBlue hover:bg-brandLightBlue text-white font-bold px-4 py-2 rounded-lg text-xs">
+                Conectar Firebase Propio
+              </button>
+            </div>
+          </details>
         </div>
 
         <div class="bg-amber-50/70 rounded-2xl p-5 border border-amber-200">
@@ -710,18 +814,42 @@
     import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // Global variables provided by environment or fallback
+    // Global variables provided by environment or custom Firebase config for external Vercel deployments
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'freedom-insurance-portal-v1';
-    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-      apiKey: "AIzaSyDummyKeyForLocalTestingFallback999",
-      authDomain: "freedom-portal.firebaseapp.com",
-      projectId: "freedom-portal-cloud"
-    };
+    let customFbCfg = null;
+    try {
+      const savedFb = localStorage.getItem('freedom_custom_firebase_config');
+      if (savedFb) customFbCfg = JSON.parse(savedFb);
+    } catch (e) {}
+
+    const firebaseConfig = customFbCfg || (typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null);
 
     let app, db, auth;
     let cloudSynced = false;
 
-    // Estado local de la aplicación
+    // Función que une listas de agentes sin borrar jamás a ninguno registrado previamente (Memoria Permanente)
+    window.mergeAgentsLists = function(listA = [], listB = []) {
+      const map = new Map();
+      [...listA, ...listB].forEach(ag => {
+        if (!ag || !ag.username) return;
+        const key = ag.username.trim().toLowerCase();
+        const existing = map.get(key);
+        if (!existing) {
+          map.set(key, {
+            ...ag,
+            registeredAt: ag.registeredAt || 'Permanente'
+          });
+        } else {
+          // Conservar la versión más reciente
+          const existingTime = existing.updatedAt || 0;
+          const incomingTime = ag.updatedAt || 0;
+          map.set(key, incomingTime >= existingTime ? { ...existing, ...ag } : { ...ag, ...existing });
+        }
+      });
+      return Array.from(map.values());
+    };
+
+    // Estado permanente de la aplicación (Nunca expira a los 30 días)
     window.agentProfile = {
       name: "Y. Medina",
       email: "ymedina@gofreedomif.com",
@@ -742,18 +870,21 @@
           password: "1234",
           email: "cruiz@freedominsurance.com",
           phone: "(786) 555-0100",
-          active: true
+          active: true,
+          registeredAt: "Permanente",
+          updatedAt: 1700000000000
         }
       ]
     };
 
-    // Cargar lista de agentes guardada localmente como respaldo inmediato además de la nube
+    // Cargar lista de agentes guardada localmente de forma permanente
     try {
       const savedPortalCfg = localStorage.getItem('freedom_portal_config_v1');
       if (savedPortalCfg) {
         const parsedCfg = JSON.parse(savedPortalCfg);
-        if (parsedCfg && Array.isArray(parsedCfg.agents)) {
-          window.portalSystemConfig = { ...window.portalSystemConfig, ...parsedCfg };
+        if (parsedCfg) {
+          const mergedAgents = window.mergeAgentsLists(window.portalSystemConfig.agents, parsedCfg.agents || []);
+          window.portalSystemConfig = { ...window.portalSystemConfig, ...parsedCfg, agents: mergedAgents };
         }
       }
     } catch (e) {}
@@ -778,9 +909,26 @@
     window.showingOnlySelected = false;
     window.selectedCompare = [];
 
-    // Inicializar Firebase según REGLAS MANDATORIAS
+    window.updateCloudStatusPill = function(isConnected, msg) {
+      const pill = document.getElementById('cloud-connection-pill');
+      if (!pill) return;
+      if (isConnected) {
+        pill.className = "text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300";
+        pill.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> ${msg || 'Sincronización Cloud En Vivo Activa'}`;
+      } else {
+        pill.className = "text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300";
+        pill.innerHTML = `<i class="fa-solid fa-hard-drive text-amber-600 mr-1"></i> ${msg || 'Memoria Permanente Activa'}`;
+      }
+    };
+
+    // Inicializar Firebase según REGLAS MANDATORIAS (Ruta de 6 segmentos para documento y colección individual de agentes)
     async function initCloudFirebase() {
       loadRememberedDeviceCredentials();
+      if (!firebaseConfig || !firebaseConfig.apiKey || firebaseConfig.apiKey.includes('DummyKey')) {
+        updateCloudStatusPill(false, "Modo Web Local Permanente (Configura Firebase en Panel Directora para multi-dispositivo en Vercel)");
+        return;
+      }
+
       try {
         app = initializeApp(firebaseConfig);
         db = getFirestore(app);
@@ -795,217 +943,157 @@
         const user = auth.currentUser;
         if (!user) return;
 
-        // Ruta pública estricta RULE 1
-        const configDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'portalConfig');
-        
-        // Listener en tiempo real con callback de error RULE 3
+        // RULE 1: Ruta estricta de documento (6 segmentos): /artifacts/{appId}/public/data/portalSettings/mainConfig
+        const configDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'portalSettings', 'mainConfig');
+        // Además escuchamos la colección individual de agentes para que jamás haya conflictos cuando 4 agentes se registran al mismo tiempo
+        const agentsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'registeredAgents');
+
         onSnapshot(configDocRef, (docSnap) => {
           if (docSnap.exists()) {
             const data = docSnap.data();
             if (data.portalSystemConfig) {
-              window.portalSystemConfig = data.portalSystemConfig;
+              const merged = window.mergeAgentsLists(window.portalSystemConfig.agents, data.portalSystemConfig.agents || []);
+              window.portalSystemConfig = {
+                ...window.portalSystemConfig,
+                ...data.portalSystemConfig,
+                agents: merged
+              };
               try {
                 localStorage.setItem('freedom_portal_config_v1', JSON.stringify(window.portalSystemConfig));
               } catch (err) {}
             }
             cloudSynced = true;
+            updateCloudStatusPill(true, `Nube Conectada (${window.portalSystemConfig.agents.length} Agentes Permanentes)`);
             if (window.currentSessionUser && window.currentSessionUser.role === 'director') {
               renderDirectorModalContent();
             }
           } else {
-            // Guardar configuración inicial si no existe
             setDoc(configDocRef, { portalSystemConfig: window.portalSystemConfig });
           }
         }, (error) => {
-          console.debug("Cloud sync fallback to local mode:", error);
+          console.debug("Cloud config listener fallback:", error);
+          updateCloudStatusPill(false, "Memoria Permanente Local Activa");
+        });
+
+        // Listener en tiempo real para cada documento de agente individual
+        onSnapshot(agentsColRef, (snapshot) => {
+          const cloudAgents = [];
+          snapshot.forEach(docItem => {
+            const agData = docItem.data();
+            if (agData && agData.username) cloudAgents.push(agData);
+          });
+          if (cloudAgents.length > 0) {
+            window.portalSystemConfig.agents = window.mergeAgentsLists(window.portalSystemConfig.agents, cloudAgents);
+            try {
+              localStorage.setItem('freedom_portal_config_v1', JSON.stringify(window.portalSystemConfig));
+            } catch (err) {}
+            updateCloudStatusPill(true, `Sincronizado en Vivo (${window.portalSystemConfig.agents.length} Agentes)`);
+            if (window.currentSessionUser && window.currentSessionUser.role === 'director') {
+              renderDirectorModalContent();
+            }
+          }
+        }, (err) => {
+          console.debug("Agents collection listener error:", err);
         });
 
       } catch (e) {
         console.debug("Firebase init running in standalone mode:", e);
+        updateCloudStatusPill(false, "Memoria Permanente del Dispositivo Activa");
       }
     }
 
-    window.savePortalConfigToCloud = async function() {
+    window.savePortalConfigToCloud = async function(singleAgent = null) {
       try {
         localStorage.setItem('freedom_portal_config_v1', JSON.stringify(window.portalSystemConfig));
       } catch (err) {}
-      if (!auth || !auth.currentUser) {
-        showToast("Configuración guardada en el sistema.");
+      if (!auth || !auth.currentUser || !db) {
+        showToast("Guardado permanentemente en el sistema.");
         return;
       }
       try {
-        const configDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'portalConfig');
+        const configDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'portalSettings', 'mainConfig');
         await setDoc(configDocRef, { portalSystemConfig: window.portalSystemConfig });
-        showToast("Configuración guardada y sincronizada.");
-      } catch (e) {
-        showToast("Configuración guardada localmente.");
-      }
-    }
 
-    // Funciones UI Globales
-    window.showToast = function(msg) {
-      const toast = document.getElementById('toast-notification');
-      const text = document.getElementById('toast-message');
-      if (!toast || !text) return;
-      text.textContent = msg;
-      toast.classList.remove('hidden');
-      setTimeout(() => toast.classList.add('hidden'), 3200);
-    }
-
-    window.handleLoginSubmit = function(e) {
-      if (e) e.preventDefault();
-      const userInp = document.getElementById('login-username').value.trim();
-      const passInp = document.getElementById('login-password').value.trim();
-      const errBox = document.getElementById('login-error-msg');
-      errBox.classList.add('hidden');
-
-      if (!userInp || !passInp) {
-        errBox.textContent = "Por favor ingresa usuario y clave.";
-        errBox.classList.remove('hidden');
-        return;
-      }
-
-      if ((userInp.toLowerCase() === portalSystemConfig.directorUser.toLowerCase() || userInp.toLowerCase() === 'directora') && passInp === portalSystemConfig.directorPass) {
-        window.currentSessionUser = {
-          role: 'director',
-          name: portalSystemConfig.directorName,
-          username: portalSystemConfig.directorUser,
-          email: agentProfile.email,
-          phone: agentProfile.phone
-        };
-        saveDeviceLoginPreference(userInp, passInp);
-        completeLoginSuccess();
-        return;
-      }
-
-      const foundAgent = portalSystemConfig.agents.find(a => (a.username.toLowerCase() === userInp.toLowerCase() || (a.email && a.email.toLowerCase() === userInp.toLowerCase())) && a.password === passInp);
-      if (!foundAgent) {
-        errBox.textContent = "Usuario o clave incorrectos. Si eres un nuevo agente, haz clic abajo en 'Registrarse como Nuevo Agente'.";
-        errBox.classList.remove('hidden');
-        return;
-      }
-
-      if (!portalSystemConfig.portalActive) {
-        errBox.innerHTML = `<i class="fa-solid fa-lock mr-1"></i> <strong>PORTAL EN PAUSA:</strong> ${portalSystemConfig.maintenanceMessage}`;
-        errBox.classList.remove('hidden');
-        return;
-      }
-
-      if (!foundAgent.active) {
-        errBox.innerHTML = `<i class="fa-solid fa-user-slash mr-1"></i> Tu cuenta de agente está desactivada temporalmente.`;
-        errBox.classList.remove('hidden');
-        return;
-      }
-
-      window.currentSessionUser = {
-        role: 'agent',
-        id: foundAgent.id,
-        name: foundAgent.name,
-        username: foundAgent.username,
-        email: foundAgent.email || '',
-        phone: foundAgent.phone || ''
-      };
-      saveDeviceLoginPreference(userInp, passInp);
-      completeLoginSuccess();
-    }
-
-    window.saveDeviceLoginPreference = function(u, p) {
-      const rem = document.getElementById('login-remember-me');
-      try {
-        if (rem && rem.checked) {
-          localStorage.setItem('freedom_device_saved_login', JSON.stringify({ u, p }));
-        } else {
-          localStorage.removeItem('freedom_device_saved_login');
+        if (singleAgent && singleAgent.username) {
+          const agentDocId = singleAgent.username.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+          const agentDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'registeredAgents', agentDocId);
+          await setDoc(agentDocRef, singleAgent);
         }
-      } catch (e) {}
-    }
-
-    window.completeLoginSuccess = function() {
-      agentProfile.name = window.currentSessionUser.name;
-      if (window.currentSessionUser.email) agentProfile.email = window.currentSessionUser.email;
-      if (window.currentSessionUser.phone) agentProfile.phone = window.currentSessionUser.phone;
-      updateAgentHeaderUI();
-
-      const dirBtn = document.getElementById('btn-director-panel');
-      if (window.currentSessionUser.role === 'director') {
-        dirBtn.classList.remove('hidden');
-      } else {
-        dirBtn.classList.add('hidden');
+        showToast("Sincronizado permanentemente en la nube.");
+      } catch (e) {
+        showToast("Guardado en memoria permanente.");
       }
+    };
 
-      document.getElementById('login-overlay').classList.add('hidden');
-    }
-
-    window.logoutSession = function() {
-      window.currentSessionUser = null;
-      closeDirectorModal();
-      document.getElementById('login-overlay').classList.remove('hidden');
-      document.getElementById('login-error-msg').classList.add('hidden');
-      loadRememberedDeviceCredentials();
-    }
-
-    window.toggleLoginPasswordVisibility = function() {
-      const inp = document.getElementById('login-password');
-      const icon = document.getElementById('login-eye-icon');
-      if (inp.type === 'password') {
-        inp.type = 'text';
-        icon.className = 'fa-solid fa-eye-slash';
-      } else {
-        inp.type = 'password';
-        icon.className = 'fa-solid fa-eye';
+    window.syncCloudNow = async function() {
+      if (!auth || !auth.currentUser || !db) {
+        showToast("Memoria local actualizada. Para multi-dispositivo en Vercel, revisa la sección de Firebase en este panel.");
+        renderDirectorModalContent();
+        return;
       }
-    }
-
-    window.updateAgentHeaderUI = function() {
-      const el = document.getElementById('header-agent-name');
-      if (el) el.textContent = agentProfile.name;
-    }
-
-    window.updateLoginPortalStatusBadge = function() {
-      const badge = document.getElementById('login-portal-status-badge');
-      if (!badge) return;
-      if (portalSystemConfig.portalActive) {
-        badge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300";
-        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Portal Activo en la Nube`;
-      } else {
-        badge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-300";
-        badge.innerHTML = `<i class="fa-solid fa-lock text-red-600"></i> Portal en Pausa`;
+      try {
+        const configDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'portalSettings', 'mainConfig');
+        const snap = await getDoc(configDocRef);
+        if (snap.exists() && snap.data().portalSystemConfig) {
+          window.portalSystemConfig.agents = window.mergeAgentsLists(
+            window.portalSystemConfig.agents,
+            snap.data().portalSystemConfig.agents || []
+          );
+          localStorage.setItem('freedom_portal_config_v1', JSON.stringify(window.portalSystemConfig));
+          renderDirectorModalContent();
+          showToast(`¡Lista sincronizada! (${window.portalSystemConfig.agents.length} agentes activos)`);
+        }
+      } catch (e) {
+        showToast("Lista de agentes refrescada.");
       }
-    }
+    };
 
-    window.openDirectorModal = function() {
-      if (!window.currentSessionUser || window.currentSessionUser.role !== 'director') return;
-      document.getElementById('dir-admin-user').value = portalSystemConfig.directorUser;
-      document.getElementById('dir-admin-pass').value = portalSystemConfig.directorPass;
-      document.getElementById('dir-maintenance-msg').value = portalSystemConfig.maintenanceMessage;
-      renderDirectorModalContent();
-      const m = document.getElementById('director-modal');
-      m.classList.remove('hidden'); m.classList.add('flex');
-    }
+    window.exportAgentsBackup = function() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(window.portalSystemConfig, null, 2));
+      const dlAnchor = document.createElement('a');
+      dlAnchor.setAttribute("href", dataStr);
+      dlAnchor.setAttribute("download", `respaldo_agentes_freedom_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(dlAnchor);
+      dlAnchor.click();
+      dlAnchor.remove();
+      showToast("Respaldo de agentes descargado.");
+    };
 
-    window.closeDirectorModal = function() {
-      const m = document.getElementById('director-modal');
-      if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
-    }
+    window.importAgentsBackup = function(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          const importedAgents = Array.isArray(imported) ? imported : (imported.agents || []);
+          window.portalSystemConfig.agents = window.mergeAgentsLists(window.portalSystemConfig.agents, importedAgents);
+          renderDirectorModalContent();
+          savePortalConfigToCloud();
+          showToast(`¡${importedAgents.length} agentes unidos permanentemente!`);
+        } catch (err) {
+          showToast("El archivo seleccionado no tiene un formato válido.");
+        }
+      };
+      reader.readAsText(file);
+    };
 
-    window.toggleGlobalPortalState = function() {
-      portalSystemConfig.portalActive = !portalSystemConfig.portalActive;
-      renderDirectorModalContent();
-      updateLoginPortalStatusBadge();
-      savePortalConfigToCloud();
-    }
-
-    window.saveDirectorSettings = function() {
-      const newU = document.getElementById('dir-admin-user').value.trim();
-      const newP = document.getElementById('dir-admin-pass').value.trim();
-      const newMsg = document.getElementById('dir-maintenance-msg').value.trim();
-      if (!newU || !newP) return;
-      portalSystemConfig.directorUser = newU;
-      portalSystemConfig.directorPass = newP;
-      if (newMsg) portalSystemConfig.maintenanceMessage = newMsg;
-      savePortalConfigToCloud();
-    }
-
+    window.saveCustomFirebaseConfig = function() {
+      const raw = document.getElementById('custom-firebase-json').value.trim();
+      if (!raw) return;
+      try {
+        const parsed = JSON.parse(raw);
+        if (!parsed.apiKey || !parsed.projectId) {
+          showToast("El JSON debe incluir al menos apiKey y projectId.");
+          return;
+        }
+        localStorage.setItem('freedom_custom_firebase_config', JSON.stringify(parsed));
+        showToast("¡Firebase conectado! Recargando conexión en vivo...");
+        setTimeout(() => location.reload(), 1000);
+      } catch (e) {
+        showToast("Formato JSON inválido. Asegúrate de usar comillas dobles.");
+      }
+    };
     window.addOrUpdateAgent = function(e) {
       if (e) e.preventDefault();
       const editId = document.getElementById('ag-form-id').value;
@@ -1017,91 +1105,39 @@
 
       if (!name || !username || !password) return;
 
+      let savedAgent = null;
       if (editId) {
         const idx = portalSystemConfig.agents.findIndex(a => a.id === editId);
         if (idx > -1) {
-          portalSystemConfig.agents[idx] = { ...portalSystemConfig.agents[idx], name, username, password, email, phone };
+          portalSystemConfig.agents[idx] = {
+            ...portalSystemConfig.agents[idx],
+            name, username, password, email, phone,
+            updatedAt: Date.now()
+          };
+          savedAgent = portalSystemConfig.agents[idx];
         }
       } else {
-        portalSystemConfig.agents.push({ id: 'ag-' + Date.now(), name, username, password, email, phone, active: true });
+        savedAgent = {
+          id: 'ag-' + Date.now(),
+          name, username, password, email, phone,
+          active: true,
+          registeredAt: new Date().toLocaleDateString('es-ES'),
+          updatedAt: Date.now()
+        };
+        portalSystemConfig.agents.push(savedAgent);
       }
       resetAgentForm();
       renderDirectorModalContent();
-      savePortalConfigToCloud();
+      savePortalConfigToCloud(savedAgent);
     }
-
-    window.editAgentInDirector = function(id) {
-      const ag = portalSystemConfig.agents.find(a => a.id === id);
-      if (!ag) return;
-      document.getElementById('ag-form-id').value = ag.id;
-      document.getElementById('ag-form-name').value = ag.name;
-      document.getElementById('ag-form-user').value = ag.username;
-      document.getElementById('ag-form-pass').value = ag.password;
-      document.getElementById('ag-form-email').value = ag.email || '';
-      document.getElementById('ag-form-phone').value = ag.phone || '';
-      document.getElementById('ag-form-submit-btn').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Guardar`;
-      document.getElementById('ag-form-cancel-btn').classList.remove('hidden');
-    }
-
-    window.resetAgentForm = function() {
-      document.getElementById('ag-form-id').value = '';
-      document.getElementById('ag-form-name').value = '';
-      document.getElementById('ag-form-user').value = '';
-      document.getElementById('ag-form-pass').value = '';
-      document.getElementById('ag-form-email').value = '';
-      document.getElementById('ag-form-phone').value = '';
-      document.getElementById('ag-form-submit-btn').innerHTML = `<i class="fa-solid fa-user-plus"></i> Agregar`;
-      document.getElementById('ag-form-cancel-btn').classList.add('hidden');
-    }
-
-    window.toggleAgentAccess = function(id) {
-      const ag = portalSystemConfig.agents.find(a => a.id === id);
-      if (ag) { ag.active = !ag.active; renderDirectorModalContent(); savePortalConfigToCloud(); }
-    }
-
-    window.deleteAgentAccount = function(id) {
-      portalSystemConfig.agents = portalSystemConfig.agents.filter(a => a.id !== id);
-      renderDirectorModalContent();
-      savePortalConfigToCloud();
-    }
-
-    window.toggleShowAgentPass = function(id) {
-      visiblePasswords[id] = !visiblePasswords[id];
-      renderDirectorModalContent();
-    }
-
-    window.renderDirectorModalContent = function() {
-      const statusBox = document.getElementById('dir-portal-status-card');
-      const isOn = portalSystemConfig.portalActive;
-      statusBox.className = isOn
-        ? "p-4 rounded-2xl border-2 border-emerald-400 bg-emerald-50 flex items-center justify-between gap-4"
-        : "p-4 rounded-2xl border-2 border-red-400 bg-red-50 flex items-center justify-between gap-4";
-
-      statusBox.innerHTML = `
-        <div>
-          <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded ${isOn ? 'bg-emerald-200 text-emerald-900' : 'bg-red-200 text-red-900'}">
-            ${isOn ? 'PORTAL EN LÍNEA' : 'PORTAL EN PAUSA'}
-          </span>
-          <h4 class="text-sm font-extrabold text-slate-800 mt-1">${isOn ? 'Agentes conectados en la nube' : 'Acceso cerrado para agentes'}</h4>
-        </div>
-        <button onclick="toggleGlobalPortalState()" class="px-4 py-2.5 rounded-xl font-bold text-xs shadow transition ${isOn ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-emerald-600 hover:bg-emerald-700 text-white'}">
-          <i class="fa-solid fa-power-off mr-1"></i> ${isOn ? 'Desactivar Portal' : 'Activar Portal'}
-        </button>
-      `;
-
-      const tbody = document.getElementById('dir-agents-tbody');
-      document.getElementById('dir-agents-count').textContent = `${portalSystemConfig.agents.length} Agentes`;
-
-      if (portalSystemConfig.agents.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">No hay agentes registrados.</td></tr>`;
-        return;
-      }
-
       tbody.innerHTML = portalSystemConfig.agents.map(ag => {
         const showP = !!visiblePasswords[ag.id];
         return `
           <tr class="hover:bg-slate-50 border-b border-slate-100 text-xs">
-            <td class="p-3 font-bold text-brandBlue">${ag.name}<span class="block text-[11px] text-slate-400 font-normal">${ag.email || 'Sin email'}</span></td>
+            <td class="p-3 font-bold text-brandBlue">
+              ${ag.name}
+              <span class="block text-[11px] text-slate-500 font-normal">${ag.email || 'Sin email'} ${ag.phone ? '• ' + ag.phone : ''}</span>
+            </td>
             <td class="p-3 font-mono font-bold">${ag.username}</td>
             <td class="p-3">
               <span class="font-mono font-bold px-2 py-1 rounded border ${showP ? 'bg-amber-50 text-amber-900 border-amber-300' : 'bg-slate-100 text-slate-500'}">
@@ -1111,8 +1147,9 @@
             </td>
             <td class="p-3">
               <span class="px-2 py-0.5 rounded-full font-bold text-[10px] ${ag.active ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-700'}">
-                ${ag.active ? 'Activo' : 'Bloqueado'}
+                ${ag.active ? 'Activo (Permanente)' : 'Bloqueado'}
               </span>
+              <span class="block text-[10px] text-slate-400 mt-0.5">Reg: ${ag.registeredAt || 'Permanente'}</span>
             </td>
             <td class="p-3 text-right space-x-1">
               <button onclick="toggleAgentAccess('${ag.id}')" class="px-2 py-1 rounded bg-amber-100 hover:bg-amber-200 font-bold">${ag.active ? 'Bloquear' : 'Dar Acceso'}</button>
@@ -1124,7 +1161,7 @@
       }).join('');
     }
 
-    // Funciones de Autoregistro Público
+    // Funciones de Autoregistro Público con Guardado Permanente e Inmediato
     window.openRegisterModal = function() {
       const m = document.getElementById('register-modal');
       document.getElementById('reg-feedback').classList.add('hidden');
@@ -1147,7 +1184,7 @@
 
       if (!name || !username || !password || !email) return;
 
-      const exists = portalSystemConfig.agents.some(a => a.username.toLowerCase() === username.toLowerCase() || a.email.toLowerCase() === email.toLowerCase());
+      const exists = portalSystemConfig.agents.some(a => a.username.toLowerCase() === username.toLowerCase() || (a.email && a.email.toLowerCase() === email.toLowerCase()));
       if (exists) {
         feedback.className = "p-2 rounded-lg bg-red-50 text-red-700 font-bold";
         feedback.textContent = "El usuario o email ya existe. Intenta con otro.";
@@ -1155,188 +1192,35 @@
         return;
       }
 
-      portalSystemConfig.agents.push({
+      const newAgentObj = {
         id: 'ag-' + Date.now(),
-        name, username, password, email, phone,
+        name,
+        username,
+        password,
+        email,
+        phone,
         active: true,
-        registeredAt: new Date().toLocaleDateString('es-ES')
-      });
+        registeredAt: new Date().toLocaleDateString('es-ES') + ' ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+        updatedAt: Date.now()
+      };
 
-      feedback.className = "p-2 rounded-lg bg-emerald-50 text-emerald-800 font-bold";
-      feedback.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> ¡Cuenta creada con éxito! Ya puedes iniciar sesión.`;
+      portalSystemConfig.agents = window.mergeAgentsLists(portalSystemConfig.agents, [newAgentObj]);
+
+      feedback.className = "p-2.5 rounded-lg bg-emerald-50 text-emerald-900 font-bold space-y-2";
+      feedback.innerHTML = `
+        <div><i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> ¡Cuenta registrada de forma permanente!</div>
+        <div class="text-[11px] font-normal text-slate-700">Tus credenciales han quedado guardadas sin fecha de expiración.</div>
+      `;
       feedback.classList.remove('hidden');
-      savePortalConfigToCloud();
+      savePortalConfigToCloud(newAgentObj);
       saveDeviceLoginPreference(username, password);
 
       setTimeout(() => {
         closeRegisterModal();
         document.getElementById('login-username').value = username;
         document.getElementById('login-password').value = password;
-      }, 1500);
+      }, 1400);
     }
-
-    window.openAgentModal = function() {
-      document.getElementById('ag-modal-name').value = agentProfile.name;
-      document.getElementById('ag-modal-email').value = agentProfile.email;
-      document.getElementById('ag-modal-phone').value = agentProfile.phone;
-      const m = document.getElementById('agent-modal');
-      m.classList.remove('hidden'); m.classList.add('flex');
-    }
-
-    window.closeAgentModal = function() {
-      const m = document.getElementById('agent-modal');
-      m.classList.add('hidden'); m.classList.remove('flex');
-    }
-
-    window.saveAgentProfile = function() {
-      const n = document.getElementById('ag-modal-name').value.trim();
-      const em = document.getElementById('ag-modal-email').value.trim();
-      const ph = document.getElementById('ag-modal-phone').value.trim();
-      if (!n || !em) return;
-      agentProfile.name = n; agentProfile.email = em; agentProfile.phone = ph;
-      updateAgentHeaderUI();
-      closeAgentModal();
-      showToast("Perfil de asesor actualizado.");
-    }
-
-    window.openForgotPasswordModal = function() {
-      const m = document.getElementById('forgot-modal');
-      document.getElementById('forgot-input-val').value = document.getElementById('login-username').value;
-      document.getElementById('forgot-feedback-msg').classList.add('hidden');
-      m.classList.remove('hidden'); m.classList.add('flex');
-    }
-
-    window.closeForgotPasswordModal = function() {
-      document.getElementById('forgot-modal').classList.add('hidden');
-      document.getElementById('forgot-modal').classList.remove('flex');
-    }
-
-    window.submitForgotPassword = function() {
-      const val = document.getElementById('forgot-input-val').value.trim();
-      const feedback = document.getElementById('forgot-feedback-msg');
-      if (!val) return;
-      feedback.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> ¡Instrucciones enviadas a <strong>${val}</strong>!`;
-      feedback.classList.remove('hidden');
-      setTimeout(() => closeForgotPasswordModal(), 3500);
-    }
-
-    // Arrancar conectividad Firebase
-    initCloudFirebase();
-  </script>
-
-  <!-- LÓGICA DE DATOS Y RENDERIZADO DEL COTIZADOR -->
-  <script>
-    window.activeQuickFilter = 'SUNCARE';
-    window.currentSubSuncareFilter = 'ALL';
-    window.currentSubUHCFilter = 'ALL';
-    window.currentSubSupplementFilter = 'ALL';
-    window.currentSubDiscountFilter = 'ALL';
-    window.showingOnlySelected = false;
-    window.customQuotedPrices = {};
-
-    // Configuración interactiva para Out-of-Pocket Protection Plan (ManhattanLife GAP FL)
-    window.oopPlanSelections = {
-      'supp-oop-2500': { daily: '100', surgery: '0', er: false },
-      'supp-oop-5000': { daily: '100', surgery: '0', er: false },
-      'supp-oop-6350': { daily: '100', surgery: '0', er: false }
-    };
-
-    // Tarifas oficiales exactas del brochure GAP-FL RATES 1024 (ManhattanLife Out-of-Pocket Protection Plan)
-    const OOP_FL_RATES = {
-      daily100: {
-        "18-29": { emp: 9.44, esp: 18.88, ech: 23.60, fam: 33.04 },
-        "30-39": { emp: 9.78, esp: 19.56, ech: 23.94, fam: 33.72 },
-        "40-49": { emp: 10.22, esp: 20.44, ech: 24.38, fam: 34.60 },
-        "50-64": { emp: 11.44, esp: 22.89, ech: 25.61, fam: 37.05 }
-      },
-      daily200: {
-        "18-29": { emp: 10.08, esp: 20.16, ech: 25.21, fam: 35.29 },
-        "30-39": { emp: 10.43, esp: 20.88, ech: 25.56, fam: 36.00 },
-        "40-49": { emp: 11.32, esp: 22.63, ech: 26.44, fam: 37.75 },
-        "50-64": { emp: 13.76, esp: 27.53, ech: 28.89, fam: 42.65 }
-      },
-      adm2500: {
-        "18-29": { emp: 3.09, esp: 6.18, ech: 7.72, fam: 10.81 },
-        "30-39": { emp: 4.25, esp: 8.51, ech: 8.89, fam: 13.14 },
-        "40-49": { emp: 6.82, esp: 13.64, ech: 11.45, fam: 18.27 },
-        "50-64": { emp: 12.45, esp: 24.90, ech: 17.09, fam: 29.54 }
-      },
-      adm5000: {
-        "18-29": { emp: 6.18, esp: 12.36, ech: 15.45, fam: 21.63 },
-        "30-39": { emp: 8.51, esp: 17.01, ech: 17.77, fam: 26.28 },
-        "40-49": { emp: 13.64, esp: 27.28, ech: 22.91, fam: 36.55 },
-        "50-64": { emp: 24.90, esp: 49.81, ech: 34.17, fam: 59.07 }
-      },
-      adm6350: {
-        "18-29": { emp: 7.85, esp: 15.69, ech: 19.62, fam: 27.47 },
-        "30-39": { emp: 10.80, esp: 21.60, ech: 22.57, fam: 33.37 },
-        "40-49": { emp: 17.32, esp: 34.65, ech: 29.09, fam: 46.42 },
-        "50-64": { emp: 31.63, esp: 63.25, ech: 43.40, fam: 75.02 }
-      },
-      surg1000: {
-        "18-29": { emp: 9.08, esp: 18.16, ech: 22.70, fam: 31.78 },
-        "30-39": { emp: 14.27, esp: 28.54, ech: 27.89, fam: 42.16 },
-        "40-49": { emp: 20.61, esp: 41.22, ech: 34.23, fam: 54.84 },
-        "50-64": { emp: 31.06, esp: 62.11, ech: 44.68, fam: 75.73 }
-      },
-      surg2000: {
-        "18-29": { emp: 18.16, esp: 36.32, ech: 45.40, fam: 63.56 },
-        "30-39": { emp: 28.54, esp: 57.09, ech: 55.79, fam: 84.33 },
-        "40-49": { emp: 41.22, esp: 82.43, ech: 68.46, fam: 109.67 },
-        "50-64": { emp: 62.12, esp: 124.23, ech: 89.36, fam: 151.47 }
-      },
-      surg3000: {
-        "18-29": { emp: 27.24, esp: 54.48, ech: 68.11, fam: 95.35 },
-        "30-39": { emp: 42.82, esp: 85.63, ech: 83.68, fam: 126.49 },
-        "40-49": { emp: 61.82, esp: 123.65, ech: 102.68, fam: 164.51 },
-        "50-64": { emp: 93.17, esp: 186.34, ech: 134.03, fam: 227.20 }
-      },
-      er250: {
-        "18-29": { emp: 7.11, esp: 14.23, ech: 17.78, fam: 24.90 },
-        "30-39": { emp: 6.14, esp: 12.28, ech: 16.81, fam: 22.95 },
-        "40-49": { emp: 5.48, esp: 10.96, ech: 16.15, fam: 21.63 },
-        "50-64": { emp: 5.20, esp: 10.40, ech: 15.87, fam: 21.07 }
-      }
-    };
-
-    window.updateOopSelection = function(planId, field, value) {
-      if (!window.oopPlanSelections[planId]) {
-        window.oopPlanSelections[planId] = { daily: '100', surgery: '0', er: false };
-      }
-      window.oopPlanSelections[planId][field] = value;
-      renderPlans();
-    };
-
-    window.getOopBandKey = function(age) {
-      if (age <= 29) return "18-29";
-      if (age <= 39) return "30-39";
-      if (age <= 49) return "40-49";
-      return "50-64";
-    };
-
-    window.calculateOopDynamicPrice = function(plan, age, tier) {
-      const band = getOopBandKey(age);
-      const sel = window.oopPlanSelections[plan.id] || { daily: '100', surgery: '0', er: false };
-      const dailyTable = sel.daily === '200' ? OOP_FL_RATES.daily200 : OOP_FL_RATES.daily100;
-      const admTable = plan.oopAdmLevel === 2500 ? OOP_FL_RATES.adm2500 : (plan.oopAdmLevel === 5000 ? OOP_FL_RATES.adm5000 : OOP_FL_RATES.adm6350);
-
-      let total = (dailyTable[band]?.[tier] || 0) + (admTable[band]?.[tier] || 0);
-
-      if (sel.surgery === '1000') total += (OOP_FL_RATES.surg1000[band]?.[tier] || 0);
-      else if (sel.surgery === '2000') total += (OOP_FL_RATES.surg2000[band]?.[tier] || 0);
-      else if (sel.surgery === '3000') total += (OOP_FL_RATES.surg3000[band]?.[tier] || 0);
-
-      if (sel.er) total += (OOP_FL_RATES.er250[band]?.[tier] || 0);
-      return total;
-    };
-
-    window.setCustomPlanPrice = function(planId, val) {
-      const num = parseFloat(val);
-      if (!isNaN(num) && num > 0) {
-        window.customQuotedPrices[planId] = num;
-      } else {
-        delete window.customQuotedPrices[planId];
-      }
       renderPlans();
     };
 
@@ -1393,11 +1277,13 @@
         family: "Suncare • BMI-PHCS (MEC)",
         name: "MEC Choice",
         category: "Suncare",
-        badge: "MEC Option • $0 Deducible • Copagos Médicos, Lab, MRI y Rx Genérico",
+        minAge: 18,
+        maxAge: 99,
+        badge: "MEC Option • $0 Deducible • Copagos Médicos, Lab, MRI y Rx Genérico (Acepta 65+ años)",
         network: "Suncare (BMI - PHCS)",
         networkDetails: "Red Nacional PHCS PPO (50 Estados) • Administrado por MBA TPA",
         hasPricing: true,
-        rates: { "18-64": { emp: 209.10, esp: 290.70, ech: 290.70, fam: 399.50 } },
+        rates: { "18-99": { emp: 209.10, esp: 290.70, ech: 290.70, fam: 399.50 } },
         deductibleNum: 0,
         deductibleText: "$0 Ind / $0 Fam",
         moopText: "$8,700 Ind / $17,400 Fam",
@@ -2034,10 +1920,123 @@
     ];
 
     window.getPlanEnrollmentFeeText = function(plan) {
-      if (plan.enrollmentFee) return plan.enrollmentFee;
-      if (plan.subGroup === 'KonnectMD') return "$49.99 (Pago único de afiliación)";
-      if (plan.subGroup === 'Sun Health & Dental') return "$30.00 (Pago único de inscripción)";
+      const isEn = window.appLang === 'en';
+      if (plan.enrollmentFee) {
+        if (isEn) {
+          return plan.enrollmentFee
+            .replace('Pago único de afiliación', 'One-time affiliation fee')
+            .replace('Pago único de inscripción', 'One-time enrollment fee')
+            .replace('Sin cuota de inscripción', 'No enrollment fee');
+        }
+        return plan.enrollmentFee;
+      }
+      if (plan.subGroup === 'KonnectMD') return isEn ? "$49.99 (One-time affiliation fee)" : "$49.99 (Pago único de afiliación)";
+      if (plan.subGroup === 'Sun Health & Dental') return isEn ? "$30.00 (One-time enrollment fee)" : "$30.00 (Pago único de inscripción)";
       return null;
+    };
+
+    // Verifica estrictamente el rango de edad elegible de cada plan según el brochure oficial
+    window.getPlanAgeBounds = function(plan) {
+      if (plan.minAge !== undefined && plan.maxAge !== undefined) {
+        return { min: plan.minAge, max: plan.maxAge };
+      }
+      if (plan.category === 'Discount') return { min: 18, max: 99 };
+      if (plan.category === 'UHC') return { min: 18, max: 64 };
+      if (plan.isDynamicOOP) return { min: 18, max: 64 };
+      if (plan.rates) {
+        let min = 999, max = 0;
+        for (const band in plan.rates) {
+          if (band.includes('-')) {
+            const [bMin, bMax] = band.split('-').map(Number);
+            if (bMin < min) min = bMin;
+            if (bMax > max) max = bMax;
+          } else {
+            const num = parseInt(band);
+            if (!isNaN(num)) {
+              if (num < min) min = num;
+              if (num > max) max = num;
+            }
+          }
+        }
+        if (max > 0) return { min, max };
+      }
+      return { min: 18, max: 64 };
+    };
+
+    window.isPlanEligibleForAge = function(plan, age) {
+      const bounds = getPlanAgeBounds(plan);
+      return age >= bounds.min && age <= bounds.max;
+    };
+
+    window.translateSpecText = function(str) {
+      if (!str || window.appLang !== 'en') return str;
+      return String(str)
+        .replace(/NO CUBIERTO/gi, 'NOT COVERED')
+        .replace(/No Cubierto/gi, 'Not Covered')
+        .replace(/CUBIERTO/g, 'COVERED')
+        .replace(/Copago/g, 'Copay')
+        .replace(/Deducible/g, 'Deductible')
+        .replace(/Ilimitado/g, 'Unlimited')
+        .replace(/Incluido/g, 'Included')
+        .replace(/Incluida/g, 'Included')
+        .replace(/por año de plan/g, 'per plan year')
+        .replace(/visitas/g, 'visits')
+        .replace(/visita/g, 'visit')
+        .replace(/días/g, 'days')
+        .replace(/día/g, 'day')
+        .replace(/meses/g, 'months')
+        .replace(/mes/g, 'month')
+        .replace(/año/g, 'year')
+        .replace(/años/g, 'years')
+        .replace(/Fuera de hospital/g, 'Non-Hospital Based')
+        .replace(/Período de espera de/g, 'Waiting period of')
+        .replace(/Requiere Pre-Autorización/g, 'Prior Authorization Required')
+        .replace(/Genérico/g, 'Generic')
+        .replace(/Preventivo/g, 'Preventive')
+        .replace(/Médico Primario/g, 'Primary Care')
+        .replace(/Especialista/g, 'Specialist')
+        .replace(/Salud Mental/g, 'Mental Health')
+        .replace(/Cirugía Interna/g, 'Inpatient Surgery')
+        .replace(/Ambulatoria/g, 'Outpatient')
+        .replace(/Sin cuota de inscripción/g, 'No enrollment fee')
+        .replace(/Tarifa Plana Familiar/g, 'Flat Family Rate')
+        .replace(/Pago único/g, 'One-time fee');
+    };
+
+    window.toggleAppLanguage = function() {
+      window.appLang = window.appLang === 'es' ? 'en' : 'es';
+      const isEn = window.appLang === 'en';
+      const langTxt = document.getElementById('lang-label-text');
+      if (langTxt) langTxt.textContent = isEn ? 'EN | ES (English Active)' : 'ES | EN';
+      const compLangBtn = document.getElementById('compare-lang-btn');
+      if (compLangBtn) compLangBtn.textContent = isEn ? 'Cambiar a Español' : 'Switch to English';
+
+      const lblAge = document.getElementById('lbl-age');
+      const lblGender = document.getElementById('lbl-gender');
+      const lblTier = document.getElementById('lbl-tier');
+      const lblNet = document.getElementById('lbl-network');
+      const lblSearch = document.getElementById('lbl-search');
+      if (lblAge) lblAge.textContent = isEn ? 'Primary Age' : 'Edad del Titular';
+      if (lblGender) lblGender.textContent = isEn ? 'Gender' : 'Sexo';
+      if (lblTier) lblTier.textContent = isEn ? 'Family Tier' : 'Grupo Familiar';
+      if (lblNet) lblNet.textContent = isEn ? 'Carrier / Category' : 'Compañía / Categoría';
+      if (lblSearch) lblSearch.textContent = isEn ? 'Search Benefit or Plan' : 'Buscador de Beneficio o Plan';
+
+      const tierSel = document.getElementById('input-tier');
+      if (tierSel && tierSel.options.length >= 4) {
+        tierSel.options[0].text = isEn ? 'Primary Only (Single)' : 'Titular (Solo)';
+        tierSel.options[1].text = isEn ? 'Primary + Spouse' : 'Titular + Cónyuge';
+        tierSel.options[2].text = isEn ? 'Primary + Child(ren)' : 'Titular + Hijos';
+        tierSel.options[3].text = isEn ? 'Full Family' : 'Familia Completa';
+      }
+
+      renderPlans();
+      if (window.currentModalPlan) updateProposalText();
+      const compModal = document.getElementById('compare-modal');
+      if (compModal && !compModal.classList.contains('hidden')) {
+        renderCompareModalContent();
+      }
+      showToast(isEn ? "Language switched to English" : "Idioma cambiado a Español");
     };
 
     window.cleanPhoneDigits = function(phoneStr) {
@@ -2045,6 +2044,7 @@
     };
 
     window.getPlanPrice = function(plan, age, tier) {
+      if (!isPlanEligibleForAge(plan, age)) return null;
       if (window.customQuotedPrices && window.customQuotedPrices[plan.id] !== undefined) {
         return window.customQuotedPrices[plan.id];
       }
@@ -2062,11 +2062,14 @@
           return plan.rates[band][tier] ?? null;
         }
       }
-      const firstKey = Object.keys(plan.rates)[0];
-      return plan.rates[firstKey]?.[tier] ?? plan.rates[firstKey]?.['emp'] ?? null;
+      return null;
     }
 
     window.getTierLabel = function(tier) {
+      if (window.appLang === 'en') {
+        const labelsEn = { emp: "Primary Only", esp: "Primary + Spouse", ech: "Primary + Child(ren)", fam: "Full Family" };
+        return labelsEn[tier] || tier;
+      }
       const labels = { emp: "Titular (Solo)", esp: "Titular + Cónyuge", ech: "Titular + Hijos", fam: "Familia Completa" };
       return labels[tier] || tier;
     }
@@ -2223,14 +2226,35 @@
     }
 
     window.renderPlans = function() {
+      const isEn = window.appLang === 'en';
       const age = parseInt(document.getElementById('input-age').value) || 35;
       const tier = document.getElementById('input-tier').value;
       const network = document.getElementById('input-network').value;
       const search = document.getElementById('input-search').value.toLowerCase().trim();
       const sortOrder = document.getElementById('sort-order').value;
 
+      // Mostrar banner informativo cuando la edad supera los 64 años
+      const seniorBanner = document.getElementById('senior-age-banner');
+      if (seniorBanner) {
+        if (age >= 65) {
+          const allEligibleForAge = PLANS_DB.filter(p => isPlanEligibleForAge(p, age));
+          seniorBanner.classList.remove('hidden');
+          document.getElementById('senior-banner-title').textContent = isEn
+            ? `Strict Age Filter Active (${age} years old):`
+            : `Filtro Estricto de Edad Activo (${age} años):`;
+          document.getElementById('senior-banner-desc').textContent = isEn
+            ? `There are ${allEligibleForAge.length} total plans eligible for age ${age} across Suncare MEC Choice, ManhattanLife (up to 74/84/89 yrs) and Discount Memberships.`
+            : `Hay ${allEligibleForAge.length} planes totales disponibles para ${age} años (Suncare MEC Choice, ManhattanLife hasta 74/84/89 años y Membresías de Descuento).`;
+        } else {
+          seniorBanner.classList.add('hidden');
+        }
+      }
+
       let filtered = PLANS_DB.filter(plan => {
         if (window.showingOnlySelected) return window.selectedCompare.includes(plan.id);
+        // FILTRO ESTRICTO DE EDAD DE EMISIÓN
+        if (!isPlanEligibleForAge(plan, age)) return false;
+
         if (network !== 'ALL' && plan.network !== network) return false;
 
         if (window.activeQuickFilter === 'SUNCARE') {
@@ -2268,23 +2292,34 @@
         return sortOrder === 'price-asc' ? a.calculatedPrice - b.calculatedPrice : b.calculatedPrice - a.calculatedPrice;
       });
 
-      document.getElementById('results-summary').innerHTML = `Mostrando <span class="text-brandBlue font-extrabold">${filtered.length} planes</span> para cliente de <span class="bg-blue-100 text-brandBlue px-2 py-0.5 rounded font-bold">${age} años</span> (<span class="font-bold">${getTierLabel(tier)}</span>)`;
+      document.getElementById('results-summary').innerHTML = isEn
+        ? `Showing <span class="text-brandBlue font-extrabold">${filtered.length} eligible plans</span> for a <span class="bg-blue-100 text-brandBlue px-2 py-0.5 rounded font-bold">${age}-year-old</span> client (<span class="font-bold">${getTierLabel(tier)}</span>)`
+        : `Mostrando <span class="text-brandBlue font-extrabold">${filtered.length} planes elegibles</span> para cliente de <span class="bg-blue-100 text-brandBlue px-2 py-0.5 rounded font-bold">${age} años</span> (<span class="font-bold">${getTierLabel(tier)}</span>)`;
 
       const grid = document.getElementById('plans-grid');
       if (filtered.length === 0) {
-        grid.innerHTML = `<div class="col-span-full bg-white rounded-2xl p-10 text-center border border-slate-200"><i class="fa-solid fa-folder-open text-4xl text-slate-300 mb-3"></i><p class="font-bold text-slate-700">No se encontraron planes con esos filtros.</p></div>`;
+        const totalForAge = PLANS_DB.filter(p => isPlanEligibleForAge(p, age)).length;
+        grid.innerHTML = `<div class="col-span-full bg-white rounded-2xl p-10 text-center border border-slate-200 space-y-3">
+          <i class="fa-solid fa-calendar-xmark text-4xl text-amber-500"></i>
+          <p class="font-extrabold text-brandBlue text-base">${isEn ? `No plans in this category accept age ${age}.` : `Los planes de esta pestaña no aceptan ${age} años de edad.`}</p>
+          <p class="text-xs text-slate-600">${isEn ? `However, there are ${totalForAge} plans available for a ${age}-year-old client across Suncare MEC Choice, ManhattanLife and Discount Memberships.` : `Sin embargo, tenemos ${totalForAge} planes que SÍ aceptan ${age} años (incluyendo Suncare MEC Choice, ManhattanLife hasta 84/89 años y Membresías).`}</p>
+          <button onclick="setQuickFilter('ALL')" class="bg-brandGreen hover:bg-brandDarkGreen text-white font-extrabold px-5 py-2.5 rounded-xl text-xs shadow transition">
+            <i class="fa-solid fa-eye mr-1"></i> ${isEn ? `View All ${totalForAge} Plans for Age ${age}` : `Ver los ${totalForAge} Planes Elegibles para ${age} Años`}
+          </button>
+        </div>`;
         return;
       }
 
       grid.innerHTML = filtered.map(plan => {
         const isSelected = window.selectedCompare.includes(plan.id);
+        const ageBounds = getPlanAgeBounds(plan);
         return `
           <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-200 border-2 ${isSelected ? 'border-brandGreen ring-2 ring-emerald-100' : 'border-slate-200'} flex flex-col justify-between overflow-hidden">
             <div>
               <div class="p-5 border-b border-slate-100 bg-gradient-to-br from-slate-50 to-white">
                 <div class="flex justify-between items-start gap-2 mb-2">
                   <span class="text-[10px] font-bold uppercase text-brandGreen bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200">${plan.family}</span>
-                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-md border bg-slate-50 text-slate-700"><i class="fa-solid fa-network-wired"></i> ${plan.network}</span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-md border bg-slate-50 text-slate-700"><i class="fa-solid fa-user-check text-brandGreen mr-1"></i>${isEn ? 'Ages' : 'Edades'} ${ageBounds.min}-${ageBounds.max === 99 ? '99+' : ageBounds.max}</span>
                 </div>
                 ${plan.portalTitle ? `
                   <div class="my-2 py-2 px-3 bg-white rounded-xl border border-slate-200/80 text-center shadow-inner">
@@ -2293,24 +2328,24 @@
                   </div>
                 ` : ''}
                 <h3 class="text-base font-extrabold text-brandBlue">${plan.name}</h3>
-                <p class="text-xs text-slate-500 font-medium">${plan.badge}</p>
+                <p class="text-xs text-slate-500 font-medium">${translateSpecText(plan.badge)}</p>
                 <div class="mt-3 pt-3 border-t border-slate-200/70 flex items-baseline justify-between">
                   ${plan.calculatedPrice !== null ? `
-                    <div><span class="text-2xl font-black text-brandBlue">$${plan.calculatedPrice.toFixed(2)}</span><span class="text-xs text-slate-500 font-semibold">/ mes</span></div>
+                    <div><span class="text-2xl font-black text-brandBlue">$${plan.calculatedPrice.toFixed(2)}</span><span class="text-xs text-slate-500 font-semibold">/ ${isEn ? 'mo' : 'mes'}</span></div>
                     ${plan.category === 'UHC' ? `
                       <span class="text-[10px] font-bold px-2 py-1 rounded bg-emerald-100 text-emerald-900 border border-emerald-300">
-                        <i class="fa-solid fa-check-circle"></i> Precio Cotizado Aplicado
+                        <i class="fa-solid fa-check-circle"></i> ${isEn ? 'Quoted Rate Applied' : 'Precio Cotizado Aplicado'}
                       </span>
                     ` : `
-                      <span class="text-[10px] text-brandDarkGreen font-bold bg-emerald-50 px-2 py-1 rounded">Tarifa Exacta</span>
+                      <span class="text-[10px] text-brandDarkGreen font-bold bg-emerald-50 px-2 py-1 rounded">${isEn ? 'Exact Rate' : 'Tarifa Exacta'}</span>
                     `}
                   ` : `
                     <div>
                       <span class="text-xs font-extrabold text-sky-900 bg-sky-100 border border-sky-200 px-3 py-1.5 rounded-lg inline-flex items-center gap-1.5">
-                        <i class="fa-solid fa-calculator text-sky-600"></i> Cotizar según ZIP Code
+                        <i class="fa-solid fa-calculator text-sky-600"></i> ${isEn ? 'Quote by ZIP Code' : 'Cotizar según ZIP Code'}
                       </span>
                     </div>
-                    <span class="text-[10px] font-bold text-slate-400">Catálogo Oficial UHC</span>
+                    <span class="text-[10px] font-bold text-slate-400">${isEn ? 'Official UHC Catalog' : 'Catálogo Oficial UHC'}</span>
                   `}
                 </div>
                 ${plan.category === 'UHC' ? `
@@ -2371,27 +2406,27 @@
                 })() : ''}
               </div>
               <div class="p-5 space-y-2 text-xs">
-                ${plan.summaryDef ? `<div class="bg-blue-50/70 p-3 rounded-xl border border-blue-200 text-slate-800 font-medium">${plan.summaryDef}</div>` : ''}
+                ${plan.summaryDef ? `<div class="bg-blue-50/70 p-3 rounded-xl border border-blue-200 text-slate-800 font-medium">${translateSpecText(plan.summaryDef)}</div>` : ''}
                 <div class="grid grid-cols-2 gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                  <div><span class="text-[10px] uppercase text-slate-400 font-bold block">Deducible (Ind/Fam)</span><span class="font-bold text-brandBlue">${plan.deductibleText}</span></div>
-                  <div><span class="text-[10px] uppercase text-slate-400 font-bold block">Máx. Bolsillo (MOOP)</span><span class="font-bold text-slate-700">${plan.moopText}</span></div>
+                  <div><span class="text-[10px] uppercase text-slate-400 font-bold block">${isEn ? 'Deductible (Ind/Fam)' : 'Deducible (Ind/Fam)'}</span><span class="font-bold text-brandBlue">${translateSpecText(plan.deductibleText)}</span></div>
+                  <div><span class="text-[10px] uppercase text-slate-400 font-bold block">${isEn ? 'Max Out of Pocket' : 'Máx. Bolsillo (MOOP)'}</span><span class="font-bold text-slate-700">${translateSpecText(plan.moopText)}</span></div>
                 </div>
-                <div><strong class="text-slate-700">Médico Primario (PCP):</strong> ${plan.pcp}</div>
-                <div><strong class="text-slate-700">Especialista / Mental:</strong> ${plan.specialist}</div>
-                <div><strong class="text-slate-700">Urgent Care / ER:</strong> ${plan.urgentCare} | ER: ${plan.er}</div>
-                <div><strong class="text-slate-700">Hospitalización:</strong> ${plan.hospital}</div>
-                <div><strong class="text-slate-700">Cirugía:</strong> ${plan.surgery}</div>
-                <div><strong class="text-slate-700">Maternidad:</strong> <span class="${plan.maternity.startsWith('CUBIERTO') ? 'text-emerald-700 font-bold' : 'text-slate-600'}">${plan.maternity}</span></div>
-                <div><strong class="text-slate-700">Farmacia (Rx):</strong> ${plan.rx}</div>
+                <div><strong class="text-slate-700">${isEn ? 'Primary Care (PCP):' : 'Médico Primario (PCP):'}</strong> ${translateSpecText(plan.pcp)}</div>
+                <div><strong class="text-slate-700">${isEn ? 'Specialist / Mental:' : 'Especialista / Mental:'}</strong> ${translateSpecText(plan.specialist)}</div>
+                <div><strong class="text-slate-700">Urgent Care / ER:</strong> ${translateSpecText(plan.urgentCare)} | ER: ${translateSpecText(plan.er)}</div>
+                <div><strong class="text-slate-700">${isEn ? 'Hospitalization:' : 'Hospitalización:'}</strong> ${translateSpecText(plan.hospital)}</div>
+                <div><strong class="text-slate-700">${isEn ? 'Surgery:' : 'Cirugía:'}</strong> ${translateSpecText(plan.surgery)}</div>
+                <div><strong class="text-slate-700">${isEn ? 'Maternity:' : 'Maternidad:'}</strong> <span class="${plan.maternity.startsWith('CUBIERTO') ? 'text-emerald-700 font-bold' : 'text-slate-600'}">${translateSpecText(plan.maternity)}</span></div>
+                <div><strong class="text-slate-700">${isEn ? 'Pharmacy (Rx):' : 'Farmacia (Rx):'}</strong> ${translateSpecText(plan.rx)}</div>
               </div>
             </div>
             <div class="px-5 py-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-2">
               <label class="inline-flex items-center gap-2 cursor-pointer text-xs font-bold text-brandBlue select-none">
-                <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleCompare('${plan.id}')" class="w-4 h-4 rounded text-brandGreen"> Comparar
+                <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleCompare('${plan.id}')" class="w-4 h-4 rounded text-brandGreen"> ${isEn ? 'Compare' : 'Comparar'}
               </label>
               <div class="flex items-center gap-1.5">
                 <button onclick="openDetailsModal('${plan.id}')" class="px-3 py-1.5 rounded-lg bg-brandBlue hover:bg-brandLightBlue text-white text-xs font-bold shadow-sm transition">
-                  <i class="fa-solid fa-circle-info mr-1"></i> Beneficios / Enviar
+                  <i class="fa-solid fa-circle-info mr-1"></i> ${isEn ? 'Benefits / Send' : 'Beneficios / Enviar'}
                 </button>
               </div>
             </div>
@@ -2481,11 +2516,12 @@
 
     window.updateProposalText = function() {
       if (!window.currentModalPlan) return;
+      const isEn = window.appLang === 'en';
       const p = window.currentModalPlan;
       const age = parseInt(document.getElementById('input-age').value) || 35;
       const tier = document.getElementById('input-tier').value;
       const price = getPlanPrice(p, age, tier);
-      const clientName = document.getElementById('prop-client-name').value.trim() || "Estimado(a) Cliente";
+      const clientName = document.getElementById('prop-client-name').value.trim() || (isEn ? "Valued Client" : "Estimado(a) Cliente");
       const feeText = getPlanEnrollmentFeeText(p);
       const telDigits = cleanPhoneDigits(window.agentProfile.phone);
       const telHref = telDigits ? `tel:${telDigits}` : '#';
@@ -2496,86 +2532,86 @@
           <div style="font-family: 'Segoe UI', Arial, sans-serif; color: #1e293b; background: #ffffff;">
             <div style="background: linear-gradient(135deg, #0A3161 0%, #1E56A0 65%, #059669 100%); color: #ffffff; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
               <div>
-                <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #A7F3D0; font-weight: 800;">Freedom Insurance Financial • Cotización Oficial</div>
-                <div style="font-size: 20px; font-weight: 900; margin-top: 2px;">Propuesta de Cobertura para ${clientName}</div>
-                <div style="font-size: 12px; color: #E2E8F0; margin-top: 2px;">Perfil Cotizado: ${age} años • ${getTierLabel(tier)}</div>
+                <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #A7F3D0; font-weight: 800;">Freedom Insurance Financial • ${isEn ? 'Official Coverage Quote' : 'Cotización Oficial'}</div>
+                <div style="font-size: 20px; font-weight: 900; margin-top: 2px;">${isEn ? 'Coverage Proposal for' : 'Propuesta de Cobertura para'} ${clientName}</div>
+                <div style="font-size: 12px; color: #E2E8F0; margin-top: 2px;">${isEn ? 'Quoted Profile:' : 'Perfil Cotizado:'} ${age} ${isEn ? 'years old' : 'años'} • ${getTierLabel(tier)}</div>
               </div>
               <div style="background: #ffffff; color: #0A3161; padding: 10px 16px; border-radius: 12px; text-align: right; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-                <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748B;">Pago Mensual Estimado</div>
-                <div style="font-size: 24px; font-weight: 900; color: #059669;">${price !== null ? '$' + price.toFixed(2) + ' <span style="font-size:12px;color:#475569;">/ mes</span>' : 'Consultar'}</div>
-                ${feeText ? `<div style="font-size: 10px; font-weight: 800; color: #B45309; margin-top: 2px;">Cuota de Inscripción: ${feeText}</div>` : ''}
+                <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748B;">${isEn ? 'Monthly Payment' : 'Pago Mensual Estimado'}</div>
+                <div style="font-size: 24px; font-weight: 900; color: #059669;">${price !== null ? '$' + price.toFixed(2) + ` <span style="font-size:12px;color:#475569;">/ ${isEn ? 'month' : 'mes'}</span>` : (isEn ? 'Contact for rate' : 'Consultar')}</div>
+                ${feeText ? `<div style="font-size: 10px; font-weight: 800; color: #B45309; margin-top: 2px;">${isEn ? 'Enrollment Fee:' : 'Cuota de Inscripción:'} ${feeText}</div>` : ''}
               </div>
             </div>
 
             <div style="padding: 20px 24px;">
               <div style="background: #F0FDF4; border-left: 4px solid #10B981; padding: 12px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 12px; color: #065F46;">
-                <strong>${p.name} (${p.network}):</strong> ${p.summaryDef || p.badge}
+                <strong>${p.name} (${p.network}):</strong> ${translateSpecText(p.summaryDef || p.badge)}
               </div>
 
               <table style="width: 100%; border-collapse: collapse; font-size: 12px; border: 1px solid #E2E8F0; border-radius: 10px; overflow: hidden;">
                 <thead>
                   <tr style="background: #0A3161; color: #ffffff; text-align: left;">
-                    <th style="padding: 10px 14px; width: 36%; border-bottom: 2px solid #059669;">Beneficio / Característica</th>
-                    <th style="padding: 10px 14px; border-bottom: 2px solid #059669;">Detalle de Cobertura</th>
+                    <th style="padding: 10px 14px; width: 36%; border-bottom: 2px solid #059669;">${isEn ? 'Benefit / Feature' : 'Beneficio / Característica'}</th>
+                    <th style="padding: 10px 14px; border-bottom: 2px solid #059669;">${isEn ? 'Coverage Detail' : 'Detalle de Cobertura'}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr style="background: #F8FAFC;">
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">Plan y Red</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">${isEn ? 'Plan & Network' : 'Plan y Red'}</td>
                     <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700;">${p.name} — ${p.network}</td>
                   </tr>
                   <tr>
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">Pago Mensual (${getTierLabel(tier)})</td>
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 800; color: #059669;">${price !== null ? '$' + price.toFixed(2) + ' / mes' : 'Consultar'}${feeText ? ` <span style="color:#B45309;font-weight:700;">(${feeText})</span>` : ''}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">${isEn ? 'Monthly Payment' : 'Pago Mensual'} (${getTierLabel(tier)})</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 800; color: #059669;">${price !== null ? '$' + price.toFixed(2) + (isEn ? ' / month' : ' / mes') : (isEn ? 'Contact Advisor' : 'Consultar')}${feeText ? ` <span style="color:#B45309;font-weight:700;">(${feeText})</span>` : ''}</td>
                   </tr>
                   <tr style="background: #F8FAFC;">
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">Deducible / Máximo de Bolsillo</td>
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;"><strong>Deducible:</strong> ${p.deductibleText} &nbsp;|&nbsp; <strong>MOOP:</strong> ${p.moopText}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">${isEn ? 'Deductible / Max Out-of-Pocket' : 'Deducible / Máximo de Bolsillo'}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;"><strong>${isEn ? 'Deductible:' : 'Deducible:'}</strong> ${translateSpecText(p.deductibleText)} &nbsp;|&nbsp; <strong>MOOP:</strong> ${translateSpecText(p.moopText)}</td>
                   </tr>
                   <tr>
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">Telemedicina 24/7</td>
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;">${p.telemedicine}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">${isEn ? '24/7 Telemedicine' : 'Telemedicina 24/7'}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;">${translateSpecText(p.telemedicine)}</td>
                   </tr>
                   <tr style="background: #F8FAFC;">
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">Médico Primario (PCP)</td>
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;">${p.pcp}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">${isEn ? 'Primary Care Physician (PCP)' : 'Médico Primario (PCP)'}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;">${translateSpecText(p.pcp)}</td>
                   </tr>
                   <tr>
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">Especialista y Salud Mental</td>
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;">${p.specialist}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">${isEn ? 'Specialist & Mental Health' : 'Especialista y Salud Mental'}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;">${translateSpecText(p.specialist)}</td>
                   </tr>
                   <tr style="background: #F8FAFC;">
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">Urgent Care / Sala de Emergencia</td>
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;"><strong>Urgent Care:</strong> ${p.urgentCare} &nbsp;|&nbsp; <strong>ER:</strong> ${p.er}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">${isEn ? 'Urgent Care / Emergency Room' : 'Urgent Care / Sala de Emergencia'}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;"><strong>Urgent Care:</strong> ${translateSpecText(p.urgentCare)} &nbsp;|&nbsp; <strong>ER:</strong> ${translateSpecText(p.er)}</td>
                   </tr>
                   <tr>
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">Hospitalización y Cirugía</td>
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;"><strong>Hospital:</strong> ${p.hospital}<br><strong>Cirugía:</strong> ${p.surgery}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">${isEn ? 'Hospitalization & Surgery' : 'Hospitalización y Cirugía'}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;"><strong>Hospital:</strong> ${translateSpecText(p.hospital)}<br><strong>${isEn ? 'Surgery:' : 'Cirugía:'}</strong> ${translateSpecText(p.surgery)}</td>
                   </tr>
                   <tr style="background: #F8FAFC;">
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">Laboratorios e Imágenes</td>
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;">${p.diagnostics}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">${isEn ? 'Lab & Diagnostic Imaging' : 'Laboratorios e Imágenes'}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;">${translateSpecText(p.diagnostics)}</td>
                   </tr>
                   <tr>
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">Maternidad</td>
-                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;">${p.maternity}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #0A3161;">${isEn ? 'Maternity' : 'Maternidad'}</td>
+                    <td style="padding: 9px 14px; border-bottom: 1px solid #E2E8F0;">${translateSpecText(p.maternity)}</td>
                   </tr>
                   <tr style="background: #F8FAFC;">
-                    <td style="padding: 9px 14px; font-weight: 700; color: #0A3161;">Farmacia y Medicamentos (Rx)</td>
-                    <td style="padding: 9px 14px;">${p.rx}</td>
+                    <td style="padding: 9px 14px; font-weight: 700; color: #0A3161;">${isEn ? 'Pharmacy & Prescriptions (Rx)' : 'Farmacia y Medicamentos (Rx)'}</td>
+                    <td style="padding: 9px 14px;">${translateSpecText(p.rx)}</td>
                   </tr>
                 </tbody>
               </table>
 
               <div style="margin-top: 16px; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 12px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                 <div>
-                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748B;">Tu Asesor(a) de Seguros Asignado</div>
+                  <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748B;">${isEn ? 'Your Licensed Insurance Advisor' : 'Tu Asesor(a) de Seguros Asignado'}</div>
                   <div style="font-size: 14px; font-weight: 900; color: #0A3161;">${window.agentProfile.name}</div>
-                  <div style="font-size: 11px; color: #475569;">Correo: <a href="mailto:${window.agentProfile.email}" style="color: #1E56A0; text-decoration: underline;">${window.agentProfile.email}</a></div>
+                  <div style="font-size: 11px; color: #475569;">Email: <a href="mailto:${window.agentProfile.email}" style="color: #1E56A0; text-decoration: underline;">${window.agentProfile.email}</a></div>
                 </div>
                 <div>
                   <a href="${telHref}" style="display: inline-flex; align-items: center; gap: 8px; background: #10B981; color: #ffffff; font-weight: 800; font-size: 13px; padding: 10px 18px; border-radius: 10px; text-decoration: none; box-shadow: 0 3px 8px rgba(16,185,129,0.3);">
-                    📞 Llamar Ahora: ${window.agentProfile.phone}
+                    📞 ${isEn ? 'Call Now:' : 'Llamar Ahora:'} ${window.agentProfile.phone}
                   </a>
                 </div>
               </div>
@@ -2584,7 +2620,9 @@
         `;
       }
 
-      const txt = `Hola ${clientName},\n\nTe comparto tu propuesta oficial de Freedom Insurance Financial:\n\n━━━━━━━━━━━━━━━━━━━━\n🛡️ PLAN: ${p.name} (${p.network})\n👥 COBERTURA: ${getTierLabel(tier)} (${age} años)\n💳 PAGO MENSUAL: ${price !== null ? '$' + price.toFixed(2) + ' / mes' : 'Consultar'}${feeText ? '\n📝 TARIFA DE AFILIACIÓN / INSCRIPCIÓN: ' + feeText : ''}\n━━━━━━━━━━━━━━━━━━━━\n\n✅ RESUMEN DE BENEFICIOS:\n• Deducible: ${p.deductibleText}\n• Máximo de Bolsillo: ${p.moopText}\n• Telemedicina 24/7: ${p.telemedicine}\n• Médico Primario (PCP): ${p.pcp}\n• Especialista: ${p.specialist}\n• Urgent Care / ER: ${p.urgentCare} | ER: ${p.er}\n• Hospitalización: ${p.hospital}\n• Cirugía: ${p.surgery}\n• Laboratorios / Imágenes: ${p.diagnostics}\n• Maternidad: ${p.maternity}\n• Farmacia (Rx): ${p.rx}\n\n📲 Comunícate conmigo con un clic:\n👤 Asesor(a): ${window.agentProfile.name}\n📞 Llamar directo: tel:${telDigits} (${window.agentProfile.phone})\n✉️ Email: ${window.agentProfile.email}`;
+      const txt = isEn
+        ? `Hello ${clientName},\n\nHere is your official coverage proposal from Freedom Insurance Financial:\n\n━━━━━━━━━━━━━━━━━━━━\n🛡️ PLAN: ${p.name} (${p.network})\n👥 COVERAGE TIER: ${getTierLabel(tier)} (${age} years old)\n💳 MONTHLY PAYMENT: ${price !== null ? '$' + price.toFixed(2) + ' / month' : 'Contact for rate'}${feeText ? '\n📝 ENROLLMENT FEE: ' + feeText : ''}\n━━━━━━━━━━━━━━━━━━━━\n\n✅ SUMMARY OF BENEFITS:\n• Deductible: ${translateSpecText(p.deductibleText)}\n• Max Out-of-Pocket: ${translateSpecText(p.moopText)}\n• 24/7 Telemedicine: ${translateSpecText(p.telemedicine)}\n• Primary Care (PCP): ${translateSpecText(p.pcp)}\n• Specialist: ${translateSpecText(p.specialist)}\n• Urgent Care / ER: ${translateSpecText(p.urgentCare)} | ER: ${translateSpecText(p.er)}\n• Hospitalization: ${translateSpecText(p.hospital)}\n• Surgery: ${translateSpecText(p.surgery)}\n• Lab / Imaging: ${translateSpecText(p.diagnostics)}\n• Maternity: ${translateSpecText(p.maternity)}\n• Pharmacy (Rx): ${translateSpecText(p.rx)}\n\n📲 Click to call me directly:\n👤 Advisor: ${window.agentProfile.name}\n📞 Direct Call: tel:${telDigits} (${window.agentProfile.phone})\n✉️ Email: ${window.agentProfile.email}`
+        : `Hola ${clientName},\n\nTe comparto tu propuesta oficial de Freedom Insurance Financial:\n\n━━━━━━━━━━━━━━━━━━━━\n🛡️ PLAN: ${p.name} (${p.network})\n👥 COBERTURA: ${getTierLabel(tier)} (${age} años)\n💳 PAGO MENSUAL: ${price !== null ? '$' + price.toFixed(2) + ' / mes' : 'Consultar'}${feeText ? '\n📝 TARIFA DE AFILIACIÓN / INSCRIPCIÓN: ' + feeText : ''}\n━━━━━━━━━━━━━━━━━━━━\n\n✅ RESUMEN DE BENEFICIOS:\n• Deducible: ${p.deductibleText}\n• Máximo de Bolsillo: ${p.moopText}\n• Telemedicina 24/7: ${p.telemedicine}\n• Médico Primario (PCP): ${p.pcp}\n• Especialista: ${p.specialist}\n• Urgent Care / ER: ${p.urgentCare} | ER: ${p.er}\n• Hospitalización: ${p.hospital}\n• Cirugía: ${p.surgery}\n• Laboratorios / Imágenes: ${p.diagnostics}\n• Maternidad: ${p.maternity}\n• Farmacia (Rx): ${p.rx}\n\n📲 Comunícate conmigo con un clic:\n👤 Asesor(a): ${window.agentProfile.name}\n📞 Llamar directo: tel:${telDigits} (${window.agentProfile.phone})\n✉️ Email: ${window.agentProfile.email}`;
       document.getElementById('prop-textarea-preview').value = txt;
     };
 
@@ -2624,57 +2662,150 @@
 
     window.openCompareModal = function() {
       if (window.selectedCompare.length === 0) return;
-      const age = parseInt(document.getElementById('input-age').value) || 35;
-      const tier = document.getElementById('input-tier').value;
-      const plans = window.selectedCompare.map(id => PLANS_DB.find(p => p.id === id)).filter(Boolean);
-
-      document.getElementById('compare-subtitle').textContent = `Comparando ${plans.length} planes • Cliente de ${age} años (${getTierLabel(tier)})`;
-
-      const rows = [
-        { label: "Precio Mensual", render: p => {
-            const pr = getPlanPrice(p, age, tier);
-            return pr !== null ? `<span class="text-lg font-black text-brandGreen">$${pr.toFixed(2)} / mes</span>` : `<span class="text-amber-700 font-bold">Consultar</span>`;
-          }
-        },
-        { label: "Compañía / Red", render: p => `<strong>${p.network}</strong><br><span class="text-[11px] text-slate-500">${p.networkDetails || ''}</span>` },
-        { label: "Resumen del Plan", render: p => `<span class="text-slate-700">${p.summaryDef || p.badge}</span>` },
-        { label: "Deducible (Ind/Fam)", render: p => `<strong class="text-brandBlue">${p.deductibleText}</strong>` },
-        { label: "Máximo de Bolsillo (MOOP)", render: p => p.moopText },
-        { label: "Telemedicina 24/7", render: p => p.telemedicine },
-        { label: "Médico Primario (PCP)", render: p => p.pcp },
-        { label: "Especialista y Salud Mental", render: p => p.specialist },
-        { label: "Urgent Care", render: p => p.urgentCare },
-        { label: "Sala de Emergencia (ER)", render: p => p.er },
-        { label: "Hospitalización (Inpatient)", render: p => p.hospital },
-        { label: "Cirugía (Inpatient / Outpatient)", render: p => p.surgery },
-        { label: "Laboratorios y CT/MRI/PET", render: p => p.diagnostics },
-        { label: "Maternidad", render: p => p.maternity },
-        { label: "Farmacia (Rx)", render: p => p.rx },
-        { label: "Otros Servicios", render: p => p.otherServices || 'Ver ficha técnica' },
-        { label: "Exclusiones y Restricciones", render: p => `<ul class="list-disc pl-4 text-red-700 space-y-1">${(p.exclusions || []).map(e => `<li>${e}</li>`).join('')}</ul>` }
-      ];
-
-      document.getElementById('compare-table-container').innerHTML = `
-        <table class="w-full text-left text-xs border-collapse border border-slate-200">
-          <thead>
-            <tr class="bg-slate-100 border-b-2 border-slate-300">
-              <th class="p-3 font-extrabold text-slate-700 w-1/5">Beneficio</th>
-              ${plans.map(p => `<th class="p-3 font-black text-brandBlue border-l border-slate-200"><span class="text-[10px] text-brandGreen uppercase block">${p.family}</span>${p.name}</th>`).join('')}
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-slate-200">
-            ${rows.map(r => `
-              <tr class="hover:bg-slate-50">
-                <td class="p-3 font-bold text-slate-700 bg-slate-50/70">${r.label}</td>
-                ${plans.map(p => `<td class="p-3 border-l border-slate-200 align-top">${r.render(p)}</td>`).join('')}
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `;
+      renderCompareModalContent();
       const m = document.getElementById('compare-modal');
       m.classList.remove('hidden'); m.classList.add('flex');
     }
+
+    window.renderCompareModalContent = function() {
+      const isEn = window.appLang === 'en';
+      const age = parseInt(document.getElementById('input-age').value) || 35;
+      const tier = document.getElementById('input-tier').value;
+      const plans = window.selectedCompare.map(id => PLANS_DB.find(p => p.id === id)).filter(Boolean);
+      const clientName = (document.getElementById('comp-client-name')?.value || '').trim() || (isEn ? 'Valued Client' : 'Estimado(a) Cliente');
+      const telDigits = cleanPhoneDigits(window.agentProfile.phone);
+      const telHref = telDigits ? `tel:${telDigits}` : '#';
+
+      document.getElementById('compare-modal-heading').textContent = isEn ? 'Side-by-Side Plan Comparison' : 'Comparativa Lado a Lado de Planes';
+      document.getElementById('compare-subtitle').textContent = isEn
+        ? `Comparing ${plans.length} plans • Client Age ${age} (${getTierLabel(tier)})`
+        : `Comparando ${plans.length} planes • Cliente de ${age} años (${getTierLabel(tier)})`;
+
+      const rows = [
+        { label: isEn ? "Monthly Payment" : "Pago Mensual", render: p => {
+            const pr = getPlanPrice(p, age, tier);
+            const fee = getPlanEnrollmentFeeText(p);
+            return (pr !== null ? `<span style="font-size:18px;font-weight:900;color:#059669;">$${pr.toFixed(2)} / ${isEn ? 'mo' : 'mes'}</span>` : `<span style="color:#B45309;font-weight:700;">${isEn ? 'Quote by ZIP' : 'Consultar'}</span>`) + (fee ? `<br><span style="font-size:10px;color:#B45309;font-weight:700;">${fee}</span>` : '');
+          }
+        },
+        { label: isEn ? "Carrier / Network" : "Compañía / Red", render: p => `<strong>${p.network}</strong><br><span style="font-size:11px;color:#64748B;">${translateSpecText(p.networkDetails || '')}</span>` },
+        { label: isEn ? "Plan Summary" : "Resumen del Plan", render: p => `<span style="color:#334155;">${translateSpecText(p.summaryDef || p.badge)}</span>` },
+        { label: isEn ? "Deductible (Ind/Fam)" : "Deducible (Ind/Fam)", render: p => `<strong style="color:#0A3161;">${translateSpecText(p.deductibleText)}</strong>` },
+        { label: isEn ? "Max Out-of-Pocket (MOOP)" : "Máximo de Bolsillo (MOOP)", render: p => translateSpecText(p.moopText) },
+        { label: isEn ? "24/7 Telemedicine" : "Telemedicina 24/7", render: p => translateSpecText(p.telemedicine) },
+        { label: isEn ? "Primary Care (PCP)" : "Médico Primario (PCP)", render: p => translateSpecText(p.pcp) },
+        { label: isEn ? "Specialist & Mental Health" : "Especialista y Salud Mental", render: p => translateSpecText(p.specialist) },
+        { label: "Urgent Care", render: p => translateSpecText(p.urgentCare) },
+        { label: isEn ? "Emergency Room (ER)" : "Sala de Emergencia (ER)", render: p => translateSpecText(p.er) },
+        { label: isEn ? "Hospitalization (Inpatient)" : "Hospitalización (Inpatient)", render: p => translateSpecText(p.hospital) },
+        { label: isEn ? "Surgery (Inpatient / Outpatient)" : "Cirugía (Inpatient / Outpatient)", render: p => translateSpecText(p.surgery) },
+        { label: isEn ? "Lab & CT/MRI/PET" : "Laboratorios y CT/MRI/PET", render: p => translateSpecText(p.diagnostics) },
+        { label: isEn ? "Maternity" : "Maternidad", render: p => translateSpecText(p.maternity) },
+        { label: isEn ? "Pharmacy (Rx)" : "Farmacia (Rx)", render: p => translateSpecText(p.rx) },
+        { label: isEn ? "Exclusions & Limitations" : "Exclusiones y Restricciones", render: p => `<ul style="margin:0;padding-left:16px;color:#B91C1C;">${(p.exclusions || []).slice(0, 3).map(e => `<li>${translateSpecText(e)}</li>`).join('')}</ul>` }
+      ];
+
+      document.getElementById('compare-table-container').innerHTML = `
+        <div id="compare-visual-email-box" style="font-family:'Segoe UI',Arial,sans-serif;color:#1E293B;background:#ffffff;border:1px solid #E2E8F0;border-radius:14px;overflow:hidden;">
+          <div style="background:linear-gradient(135deg,#0A3161 0%,#1E56A0 65%,#059669 100%);color:#ffffff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+            <div>
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#A7F3D0;font-weight:800;">Freedom Insurance Financial • ${isEn ? 'Official Plan Comparison' : 'Comparativa Oficial de Planes'}</div>
+              <div style="font-size:18px;font-weight:900;margin-top:2px;">${isEn ? 'Prepared for' : 'Preparado para'}: ${clientName}</div>
+              <div style="font-size:12px;color:#E2E8F0;">${isEn ? 'Client Profile:' : 'Perfil Cotizado:'} ${age} ${isEn ? 'years old' : 'años'} • ${getTierLabel(tier)}</div>
+            </div>
+          </div>
+
+          <div style="padding:16px;overflow-x:auto;">
+            <table style="width:100%;text-align:left;font-size:12px;border-collapse:collapse;border:1px solid #CBD5E1;">
+              <thead>
+                <tr style="background:#0A3161;color:#ffffff;">
+                  <th style="padding:10px 12px;font-weight:800;width:18%;border-bottom:2px solid #10B981;">${isEn ? 'Benefit / Feature' : 'Beneficio'}</th>
+                  ${plans.map(p => `<th style="padding:10px 12px;font-weight:900;border-left:1px solid #1E56A0;border-bottom:2px solid #10B981;"><span style="font-size:10px;color:#A7F3D0;text-transform:uppercase;display:block;">${p.family}</span>${p.name}</th>`).join('')}
+                </tr>
+              </thead>
+              <tbody>
+                ${rows.map((r, idx) => `
+                  <tr style="background:${idx % 2 === 0 ? '#F8FAFC' : '#FFFFFF'};">
+                    <td style="padding:9px 12px;font-weight:700;color:#0A3161;border-bottom:1px solid #E2E8F0;">${r.label}</td>
+                    ${plans.map(p => `<td style="padding:9px 12px;border-left:1px solid #E2E8F0;border-bottom:1px solid #E2E8F0;vertical-align:top;">${r.render(p)}</td>`).join('')}
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+
+            <div style="margin-top:16px;background:#F1F5F9;border:1px solid #CBD5E1;border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+              <div>
+                <div style="font-size:10px;font-weight:800;text-transform:uppercase;color:#64748B;">${isEn ? 'Your Licensed Insurance Advisor' : 'Tu Asesor(a) de Seguros Asignado'}</div>
+                <div style="font-size:14px;font-weight:900;color:#0A3161;">${window.agentProfile.name}</div>
+                <div style="font-size:11px;color:#475569;">Email: <a href="mailto:${window.agentProfile.email}" style="color:#1E56A0;">${window.agentProfile.email}</a></div>
+              </div>
+              <div>
+                <a href="${telHref}" style="display:inline-flex;align-items:center;gap:8px;background:#10B981;color:#ffffff;font-weight:800;font-size:12px;padding:9px 16px;border-radius:10px;text-decoration:none;">
+                  📞 ${isEn ? 'Call Now:' : 'Llamar Ahora:'} ${window.agentProfile.phone}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Construir resumen texto para WhatsApp / cuerpo de correo
+      const waLines = plans.map((p, i) => {
+        const pr = getPlanPrice(p, age, tier);
+        const fee = getPlanEnrollmentFeeText(p);
+        return isEn
+          ? `*${i + 1}) ${p.name} (${p.network})*\n• Monthly Payment: ${pr !== null ? '$' + pr.toFixed(2) + '/mo' : 'Quote by ZIP'}${fee ? ' (' + fee + ')' : ''}\n• Deductible: ${translateSpecText(p.deductibleText)} | MOOP: ${translateSpecText(p.moopText)}\n• PCP: ${translateSpecText(p.pcp)} | Specialist: ${translateSpecText(p.specialist)}\n• Hospital: ${translateSpecText(p.hospital)}\n• Maternity: ${translateSpecText(p.maternity)} | Rx: ${translateSpecText(p.rx)}`
+          : `*${i + 1}) ${p.name} (${p.network})*\n• Pago Mensual: ${pr !== null ? '$' + pr.toFixed(2) + '/mes' : 'Cotizar por ZIP'}${fee ? ' (' + fee + ')' : ''}\n• Deducible: ${p.deductibleText} | MOOP: ${p.moopText}\n• PCP: ${p.pcp} | Especialista: ${p.specialist}\n• Hospital: ${p.hospital}\n• Maternidad: ${p.maternity} | Rx: ${p.rx}`;
+      }).join('\n\n');
+
+      const fullWa = isEn
+        ? `Hello ${clientName},\n\nHere is your side-by-side comparison of ${plans.length} coverage options from Freedom Insurance Financial (${age} yrs • ${getTierLabel(tier)}):\n\n${waLines}\n\n📲 Contact me with 1 click:\n👤 Advisor: ${window.agentProfile.name}\n📞 Call: tel:${telDigits} (${window.agentProfile.phone})\n✉️ Email: ${window.agentProfile.email}`
+        : `Hola ${clientName},\n\nTe comparto la comparativa lado a lado de tus ${plans.length} opciones de cobertura en Freedom Insurance Financial (${age} años • ${getTierLabel(tier)}):\n\n${waLines}\n\n📲 Comunícate conmigo con un clic:\n👤 Asesor(a): ${window.agentProfile.name}\n📞 Llamar: tel:${telDigits} (${window.agentProfile.phone})\n✉️ Email: ${window.agentProfile.email}`;
+      document.getElementById('compare-whatsapp-text').value = fullWa;
+    };
+
+    window.copyRichCompareTable = function() {
+      const box = document.getElementById('compare-visual-email-box');
+      if (!box) return;
+      const range = document.createRange();
+      range.selectNodeContents(box);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      try {
+        document.execCommand('copy');
+        showToast(window.appLang === 'en' ? "Comparison table copied! Paste it into your email (Ctrl+V)." : "¡Tabla comparativa con colores copiada! Pégala en tu correo (Ctrl+V).");
+      } catch (e) {}
+      sel.removeAllRanges();
+    };
+
+    window.copyCompareWhatsApp = function() {
+      const ta = document.getElementById('compare-whatsapp-text');
+      ta.classList.remove('hidden');
+      ta.select();
+      document.execCommand('copy');
+      ta.classList.add('hidden');
+      showToast(window.appLang === 'en' ? "Comparison copied for WhatsApp!" : "¡Comparativa copiada para WhatsApp!");
+    };
+
+    window.sendCompareEmailGmail = function() {
+      const isEn = window.appLang === 'en';
+      const clientEmail = (document.getElementById('comp-client-email')?.value || '').trim();
+      copyRichCompareTable();
+      const bodyTxt = document.getElementById('compare-whatsapp-text').value;
+      const subject = isEn
+        ? `Official Side-by-Side Plan Comparison - Freedom Insurance Financial`
+        : `Comparativa Oficial de Planes de Cobertura - Freedom Insurance Financial`;
+      window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(clientEmail)}&cc=${encodeURIComponent(window.agentProfile.email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyTxt)}`, '_blank');
+    };
+
+    window.printCompareTable = function() {
+      const content = document.getElementById('compare-visual-email-box')?.outerHTML;
+      if (!content) return;
+      const w = window.open('', '_blank');
+      w.document.write(`<html><head><title>Comparativa Freedom Insurance</title></head><body style="margin:20px;">${content}<script>window.onload=function(){window.print();}<\/script></body></html>`);
+      w.document.close();
+    };
 
     window.closeCompareModal = function() {
       document.getElementById('compare-modal').classList.add('hidden');
