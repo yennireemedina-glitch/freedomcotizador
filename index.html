@@ -954,394 +954,394 @@
             if (data.portalSystemConfig) {
               const merged = window.mergeAgentsLists(window.portalSystemConfig.agents, data.portalSystemConfig.agents || []);
               window.portalSystemConfig = {
-                ...window.portalSystemConfig,
-                ...data.portalSystemConfig,
-                agents: merged
-              };
-              try {
-                localStorage.setItem('freedom_portal_config_v1', JSON.stringify(window.portalSystemConfig));
-              } catch (err) {}
+          portalActive: true,
+          maintenanceMessage: "El portal de cotización se encuentra temporalmente en pausa por la Dirección.",
+          directorUser: "ymedina@gofreedomif.com",
+          directorPass: "Freedomif18",
+          directorName: "Y. Medina (Directora)",
+          agents: [
+            {
+              id: "ag-1",
+              name: "Carlos Ruiz",
+              username: "agente1",
+              password: "1234",
+              email: "cruiz@freedominsurance.com",
+              phone: "(786) 555-0100",
+              active: true,
+              registeredAt: "Permanente",
+              updatedAt: 1700000000000
             }
-            cloudSynced = true;
-            updateCloudStatusPill(true, `Nube Conectada (${window.portalSystemConfig.agents.length} Agentes Permanentes)`);
-            if (window.currentSessionUser && window.currentSessionUser.role === 'director') {
-              renderDirectorModalContent();
-            }
-          } else {
-            setDoc(configDocRef, { portalSystemConfig: window.portalSystemConfig });
-          }
-        }, (error) => {
-          console.debug("Cloud config listener fallback:", error);
-          updateCloudStatusPill(false, "Memoria Permanente Local Activa");
-        });
-
-        // Listener en tiempo real para cada documento de agente individual
-        onSnapshot(agentsColRef, (snapshot) => {
-          const cloudAgents = [];
-          snapshot.forEach(docItem => {
-            const agData = docItem.data();
-            if (agData && agData.username) cloudAgents.push(agData);
-          });
-          if (cloudAgents.length > 0) {
-            window.portalSystemConfig.agents = window.mergeAgentsLists(window.portalSystemConfig.agents, cloudAgents);
-            try {
-              localStorage.setItem('freedom_portal_config_v1', JSON.stringify(window.portalSystemConfig));
-            } catch (err) {}
-            updateCloudStatusPill(true, `Sincronizado en Vivo (${window.portalSystemConfig.agents.length} Agentes)`);
-            if (window.currentSessionUser && window.currentSessionUser.role === 'director') {
-              renderDirectorModalContent();
-            }
-          }
-        }, (err) => {
-          console.debug("Agents collection listener error:", err);
-        });
-
-      } catch (e) {
-        console.debug("Firebase init running in standalone mode:", e);
-        updateCloudStatusPill(false, "Memoria Permanente del Dispositivo Activa");
-      }
-    }
-
-    window.savePortalConfigToCloud = async function(singleAgent = null) {
-      try {
-        localStorage.setItem('freedom_portal_config_v1', JSON.stringify(window.portalSystemConfig));
-      } catch (err) {}
-      if (!auth || !auth.currentUser || !db) {
-        showToast("Guardado permanentemente en el sistema.");
-        return;
-      }
-      try {
-        const configDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'portalSettings', 'mainConfig');
-        await setDoc(configDocRef, { portalSystemConfig: window.portalSystemConfig });
-
-        if (singleAgent && singleAgent.username) {
-          const agentDocId = singleAgent.username.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '_');
-          const agentDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'registeredAgents', agentDocId);
-          await setDoc(agentDocRef, singleAgent);
-        }
-        showToast("Sincronizado permanentemente en la nube.");
-      } catch (e) {
-        showToast("Guardado en memoria permanente.");
-      }
-    };
-
-    window.syncCloudNow = async function() {
-      if (!auth || !auth.currentUser || !db) {
-        showToast("Memoria local actualizada. Para multi-dispositivo en Vercel, revisa la sección de Firebase en este panel.");
-        renderDirectorModalContent();
-        return;
-      }
-      try {
-        const configDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'portalSettings', 'mainConfig');
-        const snap = await getDoc(configDocRef);
-        if (snap.exists() && snap.data().portalSystemConfig) {
-          window.portalSystemConfig.agents = window.mergeAgentsLists(
-            window.portalSystemConfig.agents,
-            snap.data().portalSystemConfig.agents || []
-          );
-          localStorage.setItem('freedom_portal_config_v1', JSON.stringify(window.portalSystemConfig));
-          renderDirectorModalContent();
-          showToast(`¡Lista sincronizada! (${window.portalSystemConfig.agents.length} agentes activos)`);
-        }
-      } catch (e) {
-        showToast("Lista de agentes refrescada.");
-      }
-    };
-
-    window.exportAgentsBackup = function() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(window.portalSystemConfig, null, 2));
-      const dlAnchor = document.createElement('a');
-      dlAnchor.setAttribute("href", dataStr);
-      dlAnchor.setAttribute("download", `respaldo_agentes_freedom_${new Date().toISOString().slice(0,10)}.json`);
-      document.body.appendChild(dlAnchor);
-      dlAnchor.click();
-      dlAnchor.remove();
-      showToast("Respaldo de agentes descargado.");
-    };
-
-    window.importAgentsBackup = function(event) {
-      const file = event.target.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          const imported = JSON.parse(e.target.result);
-          const importedAgents = Array.isArray(imported) ? imported : (imported.agents || []);
-          window.portalSystemConfig.agents = window.mergeAgentsLists(window.portalSystemConfig.agents, importedAgents);
-          renderDirectorModalContent();
-          savePortalConfigToCloud();
-          showToast(`¡${importedAgents.length} agentes unidos permanentemente!`);
-        } catch (err) {
-          showToast("El archivo seleccionado no tiene un formato válido.");
-        }
-      };
-      reader.readAsText(file);
-    };
-
-    window.saveCustomFirebaseConfig = function() {
-      const raw = document.getElementById('custom-firebase-json').value.trim();
-      if (!raw) return;
-      try {
-        const parsed = JSON.parse(raw);
-        if (!parsed.apiKey || !parsed.projectId) {
-          showToast("El JSON debe incluir al menos apiKey y projectId.");
-          return;
-        }
-        localStorage.setItem('freedom_custom_firebase_config', JSON.stringify(parsed));
-        showToast("¡Firebase conectado! Recargando conexión en vivo...");
-        setTimeout(() => location.reload(), 1000);
-      } catch (e) {
-        showToast("Formato JSON inválido. Asegúrate de usar comillas dobles.");
-      }
-    };
-    window.addOrUpdateAgent = function(e) {
-      if (e) e.preventDefault();
-      const editId = document.getElementById('ag-form-id').value;
-      const name = document.getElementById('ag-form-name').value.trim();
-      const username = document.getElementById('ag-form-user').value.trim();
-      const password = document.getElementById('ag-form-pass').value.trim();
-      const email = document.getElementById('ag-form-email').value.trim();
-      const phone = document.getElementById('ag-form-phone').value.trim();
-
-      if (!name || !username || !password) return;
-
-      let savedAgent = null;
-      if (editId) {
-        const idx = portalSystemConfig.agents.findIndex(a => a.id === editId);
-        if (idx > -1) {
-          portalSystemConfig.agents[idx] = {
-            ...portalSystemConfig.agents[idx],
-            name, username, password, email, phone,
-            updatedAt: Date.now()
-          };
-          savedAgent = portalSystemConfig.agents[idx];
-        }
-      } else {
-        savedAgent = {
-          id: 'ag-' + Date.now(),
-          name, username, password, email, phone,
-          active: true,
-          registeredAt: new Date().toLocaleDateString('es-ES'),
-          updatedAt: Date.now()
+          ]
         };
-        portalSystemConfig.agents.push(savedAgent);
-      }
-      resetAgentForm();
-      renderDirectorModalContent();
-      savePortalConfigToCloud(savedAgent);
-    }
-      tbody.innerHTML = portalSystemConfig.agents.map(ag => {
-        const showP = !!visiblePasswords[ag.id];
-        return `
-          <tr class="hover:bg-slate-50 border-b border-slate-100 text-xs">
-            <td class="p-3 font-bold text-brandBlue">
-              ${ag.name}
-              <span class="block text-[11px] text-slate-500 font-normal">${ag.email || 'Sin email'} ${ag.phone ? '• ' + ag.phone : ''}</span>
-            </td>
-            <td class="p-3 font-mono font-bold">${ag.username}</td>
-            <td class="p-3">
-              <span class="font-mono font-bold px-2 py-1 rounded border ${showP ? 'bg-amber-50 text-amber-900 border-amber-300' : 'bg-slate-100 text-slate-500'}">
-                ${showP ? ag.password : '••••••••'}
-              </span>
-              <button onclick="toggleShowAgentPass('${ag.id}')" class="ml-1.5 text-slate-500 hover:text-brandBlue"><i class="fa-solid ${showP ? 'fa-eye-slash' : 'fa-eye'}"></i></button>
-            </td>
-            <td class="p-3">
-              <span class="px-2 py-0.5 rounded-full font-bold text-[10px] ${ag.active ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-700'}">
-                ${ag.active ? 'Activo (Permanente)' : 'Bloqueado'}
-              </span>
-              <span class="block text-[10px] text-slate-400 mt-0.5">Reg: ${ag.registeredAt || 'Permanente'}</span>
-            </td>
-            <td class="p-3 text-right space-x-1">
-              <button onclick="toggleAgentAccess('${ag.id}')" class="px-2 py-1 rounded bg-amber-100 hover:bg-amber-200 font-bold">${ag.active ? 'Bloquear' : 'Dar Acceso'}</button>
-              <button onclick="editAgentInDirector('${ag.id}')" class="px-2 py-1 rounded bg-blue-50 text-brandBlue font-bold">Editar</button>
-              <button onclick="deleteAgentAccount('${ag.id}')" class="px-2 py-1 rounded bg-red-50 text-red-600 font-bold"><i class="fa-solid fa-trash"></i></button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
 
-    // Funciones de Autoregistro Público con Guardado Permanente e Inmediato
-    window.openRegisterModal = function() {
-      const m = document.getElementById('register-modal');
-      document.getElementById('reg-feedback').classList.add('hidden');
-      m.classList.remove('hidden'); m.classList.add('flex');
-    }
+        // Cargar lista de agentes guardada localmente de forma permanente
+        try {
+          const savedPortalCfg = localStorage.getItem('freedom_portal_config_v1');
+          if (savedPortalCfg) {
+            const parsedCfg = JSON.parse(savedPortalCfg);
+            if (parsedCfg) {
+              const mergedAgents = window.mergeAgentsLists(window.portalSystemConfig.agents, parsedCfg.agents || []);
+              window.portalSystemConfig = { ...window.portalSystemConfig, ...parsedCfg, agents: mergedAgents };
+            }
+          }
+        } catch (e) {}
 
-    window.closeRegisterModal = function() {
-      const m = document.getElementById('register-modal');
-      m.classList.add('hidden'); m.classList.remove('flex');
-    }
+        // Cargar credenciales recordadas únicamente en el dispositivo del usuario actual
+        window.loadRememberedDeviceCredentials = function() {
+          try {
+            const savedCreds = localStorage.getItem('freedom_device_saved_login');
+            if (savedCreds) {
+              const { u, p } = JSON.parse(savedCreds);
+              const uEl = document.getElementById('login-username');
+              const pEl = document.getElementById('login-password');
+              if (uEl && u) uEl.value = u;
+              if (pEl && p) pEl.value = p;
+            }
+          } catch (e) {}
+        };
 
-    window.handlePublicRegister = function(e) {
-      if (e) e.preventDefault();
-      const name = document.getElementById('reg-name').value.trim();
-      const username = document.getElementById('reg-user').value.trim();
-      const password = document.getElementById('reg-pass').value.trim();
-      const email = document.getElementById('reg-email').value.trim();
-      const phone = document.getElementById('reg-phone').value.trim();
-      const feedback = document.getElementById('reg-feedback');
+        window.currentSessionUser = null;
+        let visiblePasswords = {};
+        window.activeQuickFilter = 'ALL';
+        window.showingOnlySelected = false;
+        window.selectedCompare = [];
 
-      if (!name || !username || !password || !email) return;
+        window.updateCloudStatusPill = function(isConnected, msg) {
+          const pill = document.getElementById('cloud-connection-pill');
+          if (!pill) return;
+          if (isConnected) {
+            pill.className = "text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300";
+            pill.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> ${msg || 'Sincronización Cloud En Vivo Activa'}`;
+          } else {
+            pill.className = "text-[10px] font-extrabold px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300";
+            pill.innerHTML = `<i class="fa-solid fa-hard-drive text-amber-600 mr-1"></i> ${msg || 'Memoria Permanente Activa'}`;
+          }
+        };
 
-      const exists = portalSystemConfig.agents.some(a => a.username.toLowerCase() === username.toLowerCase() || (a.email && a.email.toLowerCase() === email.toLowerCase()));
-      if (exists) {
-        feedback.className = "p-2 rounded-lg bg-red-50 text-red-700 font-bold";
-        feedback.textContent = "El usuario o email ya existe. Intenta con otro.";
-        feedback.classList.remove('hidden');
-        return;
-      }
+        // Inicializar Firebase según REGLAS MANDATORIAS (Ruta de 6 segmentos para documento y colección individual de agentes)
+        async function initCloudFirebase() {
+          loadRememberedDeviceCredentials();
+          if (!firebaseConfig || !firebaseConfig.apiKey || firebaseConfig.apiKey.includes('DummyKey')) {
+            updateCloudStatusPill(false, "Modo Web Local Permanente (Configura Firebase en Panel Directora para multi-dispositivo en Vercel)");
+            return;
+          }
 
-      const newAgentObj = {
-        id: 'ag-' + Date.now(),
-        name,
-        username,
-        password,
-        email,
-        phone,
-        active: true,
-        registeredAt: new Date().toLocaleDateString('es-ES') + ' ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
-        updatedAt: Date.now()
-      };
+          try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
 
-      portalSystemConfig.agents = window.mergeAgentsLists(portalSystemConfig.agents, [newAgentObj]);
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+              await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+              await signInAnonymously(auth);
+            }
 
-      feedback.className = "p-2.5 rounded-lg bg-emerald-50 text-emerald-900 font-bold space-y-2";
-      feedback.innerHTML = `
-        <div><i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> ¡Cuenta registrada de forma permanente!</div>
-        <div class="text-[11px] font-normal text-slate-700">Tus credenciales han quedado guardadas sin fecha de expiración.</div>
-      `;
-      feedback.classList.remove('hidden');
-      savePortalConfigToCloud(newAgentObj);
-      saveDeviceLoginPreference(username, password);
+            const user = auth.currentUser;
+            if (!user) return;
 
-      setTimeout(() => {
-        closeRegisterModal();
-        document.getElementById('login-username').value = username;
-        document.getElementById('login-password').value = password;
-      }, 1400);
-    }
-      renderPlans();
-    };
+            // RULE 1: Ruta estricta de documento (6 segmentos): /artifacts/{appId}/public/data/portalSettings/mainConfig
+            const configDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'portalSettings', 'mainConfig');
+            // Además escuchamos la colección individual de agentes para que jamás haya conflictos cuando 4 agentes se registran al mismo tiempo
+            const agentsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'registeredAgents');
 
-    const SUNCARE_EXCLUSIONS_COMMON = [
-      "Estos planes NO son seguros médicos mayores tradicionales (Major Medical); son planes de beneficios por días/visitas limitados.",
-      "Red de Proveedores: Red nacional PHCS PPO disponible en los 50 estados (no requiere referido para ver a un especialista).",
-      "Requiere Pre-Autorización (Precertification al 844-462-6334) antes de cualquier admisión hospitalaria, cirugía, procedimiento ambulatorio o imagen avanzada (CT/MRI/PET). La falta de pre-autorización puede reducir beneficios.",
-      "Las admisiones hospitalarias de emergencia deben reportarse dentro de las 48 horas o al siguiente día hábil (72 horas en algunos estados).",
-      "Servicios preventivos, visitas médicas (PCP/Especialista), laboratorios y radiología deben realizarse en instalaciones fuera de hospital (Non-Hospital Based).",
-      "Farmacias participantes: Walmart, CVS, Walgreens y farmacias locales reconocidas (ScriptClaim Help Desk: 800-470-5281). El pedido por correo (Mail Order) tiene un copago de 3 veces el copago retail para suministro de 90 días."
-    ];
+            onSnapshot(configDocRef, (docSnap) => {
+              if (docSnap.exists()) {
+                const data = docSnap.data();
+                if (data.portalSystemConfig) {
+                  const merged = window.mergeAgentsLists(window.portalSystemConfig.agents, data.portalSystemConfig.agents || []);
+                  window.portalSystemConfig = {
+                    ...window.portalSystemConfig,
+                    ...data.portalSystemConfig,
+                    agents: merged
+                  };
+                  try {
+                    localStorage.setItem('freedom_portal_config_v1', JSON.stringify(window.portalSystemConfig));
+                  } catch (err) {}
+                }
+                cloudSynced = true;
+                updateCloudStatusPill(true, `Nube Conectada (${window.portalSystemConfig.agents.length} Agentes Permanentes)`);
+                if (window.currentSessionUser && window.currentSessionUser.role === 'director') {
+                  renderDirectorModalContent();
+                }
+              } else {
+                setDoc(configDocRef, { portalSystemConfig: window.portalSystemConfig });
+              }
+            }, (error) => {
+              console.debug("Cloud config listener fallback:", error);
+              updateCloudStatusPill(false, "Memoria Permanente Local Activa");
+            });
 
-    // Base de datos oficial depurada en 4 pilares: 1) Suncare (8 planes BMI-PHCS), 2) UHC (16 planes), 3) ManhattanLife (12 planes), 4) Membresías (13 planes)
-    const PLANS_DB = [
-      // ================= 1. SUNCARE (BMI - PHCS NETWORK: LOS 8 PLANES OFICIALES DEL BROCHURE Y PORTAL) =================
-      {
-        id: "suncare-mec-classic",
-        subGroup: "MEC Options",
-        portalTitle: "CLASSIC",
-        portalColor: "text-cyan-600 italic font-black tracking-wider",
-        family: "Suncare • BMI-PHCS (MEC)",
-        name: "MEC Classic",
-        category: "Suncare",
-        badge: "MEC Option • $0 Deducible • Preventivo 100% + Telemedicina $0",
-        network: "Suncare (BMI - PHCS)",
-        networkDetails: "Red Nacional PHCS PPO (50 Estados) • Administrado por MBA TPA",
-        hasPricing: true,
-        rates: { "18-64": { emp: 127.50, esp: 181.90, ech: 181.90, fam: 231.67 } },
-        deductibleNum: 0,
-        deductibleText: "$0 Ind / $0 Fam",
-        moopText: "N/A",
-        telemedicine: "$0 Copago (Ilimitado 24/7 - 956-MYMDNOW)",
-        pcp: "NO CUBIERTO (Solo Preventivo y Bienestar Fuera de Hospital Incluido 100%)",
-        specialist: "NO CUBIERTO",
-        urgentCare: "NO CUBIERTO",
-        er: "NO CUBIERTO",
-        hospital: "NO CUBIERTO",
-        surgery: "NO CUBIERTO (Anestesia y 2da Opinión No Cubiertas)",
-        diagnostics: "Preventivo y Bienestar (Non-Hospital Based): Incluido 100% | Lab/Rayos X y CT/MRI: NO CUBIERTO",
-        maternity: "NO CUBIERTO",
-        rx: "Preventivo (Solo Genéricos): $0 Copago | No-Preventivo Retail: NO CUBIERTO",
-        otherServices: "Cuidado preventivo ACA fuera de hospital incluido. No cubre visitas por enfermedad, hospitalización ni cirugía.",
-        summaryDef: "Plan MEC inicial de Suncare (BMI-PHCS) con $0 deducible. Cubre al 100% servicios preventivos y de bienestar (fuera de hospital), Telemedicina ilimitada $0 y medicamentos genéricos preventivos $0.",
-        exclusions: [
-          ...SUNCARE_EXCLUSIONS_COMMON,
-          "MEC Classic NO cubre visitas a médico primario por enfermedad, especialistas, urgent care, laboratorios no preventivos, imágenes avanzadas ni hospitalización."
-        ]
-      },
-      {
-        id: "suncare-mec-choice",
-        subGroup: "MEC Options",
-        portalTitle: "CHOICE",
-        portalColor: "text-orange-500 italic font-black tracking-wider",
-        family: "Suncare • BMI-PHCS (MEC)",
-        name: "MEC Choice",
-        category: "Suncare",
-        minAge: 18,
-        maxAge: 99,
-        badge: "MEC Option • $0 Deducible • Copagos Médicos, Lab, MRI y Rx Genérico (Acepta 65+ años)",
-        network: "Suncare (BMI - PHCS)",
-        networkDetails: "Red Nacional PHCS PPO (50 Estados) • Administrado por MBA TPA",
-        hasPricing: true,
-        rates: { "18-99": { emp: 209.10, esp: 290.70, ech: 290.70, fam: 399.50 } },
-        deductibleNum: 0,
-        deductibleText: "$0 Ind / $0 Fam",
-        moopText: "$8,700 Ind / $17,400 Fam",
-        telemedicine: "$0 Copago (Ilimitado 24/7)",
-        pcp: "$35 Copago (Fuera de hospital / Non-Hospital Based)",
-        specialist: "$75 Copago (Fuera de hospital • Incluye Salud Mental y Conductual)",
-        urgentCare: "$85 Copago",
-        er: "NO CUBIERTO",
-        hospital: "NO CUBIERTO",
-        surgery: "NO CUBIERTO (Hospital Ambulatorio, Cirugía y Anestesia No Cubiertos)",
-        diagnostics: "Preventivo: Incluido | Lab y Radiología (Fuera de hospital): $50 Copago | CT/MRI/MRA/PET Scan (Fuera de hospital, requiere Pre-Autorización): $500 Copago (3 veces/año)",
-        maternity: "NO CUBIERTO",
-        rx: "Preventivo (Genérico): $0 Copago | No-Preventivo Retail: $5 Copago (Genérico)",
-        otherServices: "Incluye Salud Mental y Conductual bajo el copago de especialista ($75). Máximo de bolsillo $8,700 Ind / $17,400 Fam.",
-        summaryDef: "Plan MEC Choice de Suncare (BMI-PHCS) con $0 deducible. Agrega visitas a Médico Primario ($35), Especialista y Salud Mental ($75), Urgent Care ($85), Laboratorios/Rayos X ($50), CT/MRI/PET ($500 hasta 3/año) y Genéricos ($5).",
-        exclusions: [
-          ...SUNCARE_EXCLUSIONS_COMMON,
-          "MEC Choice NO cubre hospitalización interna, cirugías ambulatorias, anestesia ni sala de emergencias (ER)."
-        ]
-      },
-      {
-        id: "suncare-dvp-7500",
-        subGroup: "DVP Options",
-        portalTitle: "Essentials 7500",
-        portalColor: "text-sky-600 font-black tracking-tight",
-        family: "Suncare • BMI-PHCS (DVP)",
-        name: "DVP Essentials 7500",
-        category: "Suncare",
-        badge: "DVP Option • Incluye Hospitalización (5 días), Cirugía y ER tras Deducible",
-        network: "Suncare (BMI - PHCS)",
-        networkDetails: "Red Nacional PHCS PPO (50 Estados) • Administrado por MBA TPA",
-        hasPricing: true,
-        rates: { "18-64": { emp: 372.28, esp: 616.08, ech: 565.08, fam: 830.28 } },
-        deductibleNum: 7500,
-        deductibleText: "$7,500 Ind / $15,000 Fam",
-        moopText: "$9,200 Ind / $18,400 Fam",
-        telemedicine: "$0 Copago (Ilimitado 24/7)",
-        pcp: "$50 Copago (2 visitas por año de plan* combinadas con Especialista)",
-        specialist: "$75 Copago (2 visitas por año de plan* combinadas con PCP • Incluye Salud Mental) | Alergias: $50 Copago",
-        urgentCare: "$75 Copago (1 visita por año de plan)",
-        er: "Deducible + 50% (1 visita por año de plan)",
-        hospital: "Deducible + 50% por admisión (5 días por año de plan • Requiere Pre-Autorización) | Visitas médicas en hospital incluidas",
-        surgery: "Interna: Incluida en copago de hospitalización (1 cirugía/año**) | Ambulatoria (Free-Standing/OP): Deducible + 50% (1 visita/año** • Límite combinado 1 cirugía/año) | Anestesia: Incluida | 2da Opinión: Ded + 50%",
-        diagnostics: "Preventivo: Incluido | Lab y Radiología (Fuera de hospital): Deducible + 50% (3 visitas/año) | CT/MRI/MRA/PET (Fuera de hospital, Pre-Aut): Deducible + 50% (1 visita/año)",
-        maternity: "NO CUBIERTO (Servicios profesionales y parto no cubiertos)",
-        rx: "Preventivo (Solo Genérico): $0 Copago | Genérico No-Preventivo: Plan de Descuento | Marca Preferida y No Preferida: No Cubierto",
-        otherServices: "Home Health Care: Deducible + 50% (10 visitas/año) | Abuso de Sustancias (Inpatient y Outpatient): Deducible + 50% (5 días/año c/u) | Ambulancia Terrestre: Ded + 50% (1/año) | Rehabilitación: No Cubierto.",
-        summaryDef: "Plan DVP Essentials 7500 de Suncare con cobertura hospitalaria (5 días/año), quirúrgica (1/año), sala de emergencias y cuidado en casa tras deducible, más visitas médicas con copago fijo desde el día 1.",
-        exclusions: [
-          ...SUNCARE_EXCLUSIONS_COMMON,
-          "*Límite combinado de 2 visitas al año entre Médico Primario (PCP) y Especialista.",
-          "**Límite combinado de 1 cirugía por año de plan entre Cirugía Interna (Inpatient) y Ambulatoria (Outpatient).",
-          "Maternidad, terapias de rehabilitación (física/habla/ocupacional) y medicamentos de marca no están cubiertos."
-        ]
-      },
-      {
-        id: "suncare-dvp-5000",
-        subGroup: "DVP Options",
+            // Listener en tiempo real para cada documento de agente individual
+            onSnapshot(agentsColRef, (snapshot) => {
+              const cloudAgents = [];
+              snapshot.forEach(docItem => {
+                const agData = docItem.data();
+                if (agData && agData.username) cloudAgents.push(agData);
+              });
+              if (cloudAgents.length > 0) {
+                window.portalSystemConfig.agents = window.mergeAgentsLists(window.portalSystemConfig.agents, cloudAgents);
+                try {
+                  localStorage.setItem('freedom_portal_config_v1', JSON.stringify(window.portalSystemConfig));
+                } catch (err) {}
+                updateCloudStatusPill(true, `Sincronizado en Vivo (${window.portalSystemConfig.agents.length} Agentes)`);
+                if (window.currentSessionUser && window.currentSessionUser.role === 'director') {
+                  renderDirectorModalContent();
+                }
+              }
+            }, (err) => {
+              console.debug("Agents collection listener error:", err);
+            });
+
+          } catch (e) {
+            console.debug("Firebase init running in standalone mode:", e);
+            updateCloudStatusPill(false, "Memoria Permanente del Dispositivo Activa");
+          }
+        }
+
+        window.savePortalConfigToCloud = async function(singleAgent = null) {
+          try {
+            localStorage.setItem('freedom_portal_config_v1', JSON.stringify(window.portalSystemConfig));
+          } catch (err) {}
+          if (!auth || !auth.currentUser || !db) {
+            showToast("Guardado permanentemente en el sistema.");
+            return;
+          }
+          try {
+            const configDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'portalSettings', 'mainConfig');
+            await setDoc(configDocRef, { portalSystemConfig: window.portalSystemConfig });
+
+            if (singleAgent && singleAgent.username) {
+              const agentDocId = singleAgent.username.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+              const agentDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'registeredAgents', agentDocId);
+              await setDoc(agentDocRef, singleAgent);
+            }
+            showToast("Sincronizado permanentemente en la nube.");
+          } catch (e) {
+            showToast("Guardado en memoria permanente.");
+          }
+        };
+
+        window.syncCloudNow = async function() {
+          if (!auth || !auth.currentUser || !db) {
+            showToast("Memoria local actualizada. Para multi-dispositivo en Vercel, revisa la sección de Firebase en este panel.");
+            renderDirectorModalContent();
+            return;
+          }
+          try {
+            const configDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'portalSettings', 'mainConfig');
+            const snap = await getDoc(configDocRef);
+            if (snap.exists() && snap.data().portalSystemConfig) {
+              window.portalSystemConfig.agents = window.mergeAgentsLists(
+                window.portalSystemConfig.agents,
+                snap.data().portalSystemConfig.agents || []
+              );
+              localStorage.setItem('freedom_portal_config_v1', JSON.stringify(window.portalSystemConfig));
+              renderDirectorModalContent();
+              showToast(`¡Lista sincronizada! (${window.portalSystemConfig.agents.length} agentes activos)`);
+            }
+          } catch (e) {
+            showToast("Lista de agentes refrescada.");
+          }
+        };
+
+        window.exportAgentsBackup = function() {
+          const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(window.portalSystemConfig, null, 2));
+          const dlAnchor = document.createElement('a');
+          dlAnchor.setAttribute("href", dataStr);
+          dlAnchor.setAttribute("download", `respaldo_agentes_freedom_${new Date().toISOString().slice(0,10)}.json`);
+          document.body.appendChild(dlAnchor);
+          dlAnchor.click();
+          dlAnchor.remove();
+          showToast("Respaldo de agentes descargado.");
+        };
+
+        window.importAgentsBackup = function(event) {
+          const file = event.target.files?.[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            try {
+              const imported = JSON.parse(e.target.result);
+              const importedAgents = Array.isArray(imported) ? imported : (imported.agents || []);
+              window.portalSystemConfig.agents = window.mergeAgentsLists(window.portalSystemConfig.agents, importedAgents);
+              renderDirectorModalContent();
+              savePortalConfigToCloud();
+              showToast(`¡${importedAgents.length} agentes unidos permanentemente!`);
+            } catch (err) {
+              showToast("El archivo seleccionado no tiene un formato válido.");
+            }
+          };
+          reader.readAsText(file);
+        };
+
+        window.saveCustomFirebaseConfig = function() {
+          const raw = document.getElementById('custom-firebase-json').value.trim();
+          if (!raw) return;
+          try {
+            const parsed = JSON.parse(raw);
+            if (!parsed.apiKey || !parsed.projectId) {
+              showToast("El JSON debe incluir al menos apiKey y projectId.");
+              return;
+            }
+            localStorage.setItem('freedom_custom_firebase_config', JSON.stringify(parsed));
+            showToast("¡Firebase conectado! Recargando conexión en vivo...");
+            setTimeout(() => location.reload(), 1000);
+          } catch (e) {
+            showToast("Formato JSON inválido. Asegúrate de usar comillas dobles.");
+          }
+        };
+
+        window.saveDeviceLoginPreference = function(u, p) {
+          const remember = document.getElementById('login-remember-me')?.checked;
+          if (remember) {
+            try { localStorage.setItem('freedom_device_saved_login', JSON.stringify({ u, p })); } catch (e) {}
+          } else {
+            localStorage.removeItem('freedom_device_saved_login');
+          }
+        };
+
+        window.handleLoginSubmit = function(e) {
+          if (e) e.preventDefault();
+          const uInput = document.getElementById('login-username').value.trim().toLowerCase();
+          const pInput = document.getElementById('login-password').value.trim();
+          const errBox = document.getElementById('login-error-msg');
+          errBox.classList.add('hidden');
+
+          const dirUser = portalSystemConfig.directorUser.trim().toLowerCase();
+          const dirPass = portalSystemConfig.directorPass.trim();
+
+          if (uInput === dirUser && pInput === dirPass) {
+            window.currentSessionUser = { name: portalSystemConfig.directorName, role: 'director', email: portalSystemConfig.directorUser };
+            saveDeviceLoginPreference(uInput, pInput);
+            finalizeSuccessfulLogin();
+            return;
+          }
+
+          const matchedAgent = portalSystemConfig.agents.find(ag => {
+            const agUser = String(ag.username || '').trim().toLowerCase();
+            const agEmail = String(ag.email || '').trim().toLowerCase();
+            const agPass = String(ag.password || '').trim();
+            return (agUser === uInput || agEmail === uInput) && agPass === pInput;
+          });
+
+          if (matchedAgent) {
+            if (matchedAgent.active === false) {
+              errBox.textContent = "Tu cuenta se encuentra bloqueada por la Directora. Contacta a administración.";
+              errBox.classList.remove('hidden');
+              return;
+            }
+            window.currentSessionUser = { name: matchedAgent.name, role: 'agent', email: matchedAgent.email || matchedAgent.username };
+            window.agentProfile = {
+              name: matchedAgent.name,
+              email: matchedAgent.email || portalSystemConfig.directorUser,
+              phone: matchedAgent.phone || "(305) 555-0199"
+            };
+            saveDeviceLoginPreference(uInput, pInput);
+            finalizeSuccessfulLogin();
+            return;
+          }
+
+          errBox.textContent = "Usuario o clave incorrectos. Verifica tus datos o regístrate como nuevo agente.";
+          errBox.classList.remove('hidden');
+        };
+
+        function finalizeSuccessfulLogin() {
+          const overlay = document.getElementById('login-overlay');
+          if (overlay) overlay.classList.add('hidden');
+          const agentNameSpan = document.getElementById('header-agent-name');
+          if (agentNameSpan) agentNameSpan.textContent = window.agentProfile.name;
+          const dirBtn = document.getElementById('btn-director-panel');
+          if (dirBtn) {
+            if (window.currentSessionUser && window.currentSessionUser.role === 'director') {
+              dirBtn.classList.remove('hidden');
+            } else {
+              dirBtn.classList.add('hidden');
+            }
+          }
+          showToast(`¡Bienvenido(a), ${window.agentProfile.name}!`);
+          renderPlans();
+        }
+
+        window.logoutSession = function() {
+          window.currentSessionUser = null;
+          const overlay = document.getElementById('login-overlay');
+          if (overlay) overlay.classList.remove('hidden');
+          const pEl = document.getElementById('login-password');
+          if (pEl) pEl.value = '';
+          showToast("Sesión cerrada correctamente.");
+        };
+
+        window.toggleLoginPasswordVisibility = function() {
+          const pEl = document.getElementById('login-password');
+          const icon = document.getElementById('login-eye-icon');
+          if (!pEl) return;
+          if (pEl.type === 'password') {
+            pEl.type = 'text';
+            if (icon) icon.className = "fa-solid fa-eye-slash";
+          } else {
+            pEl.type = 'password';
+            if (icon) icon.className = "fa-solid fa-eye";
+          }
+        };
+
+        window.openAgentModal = function() {
+          const m = document.getElementById('agent-modal');
+          document.getElementById('ag-modal-name').value = window.agentProfile.name;
+          document.getElementById('ag-modal-email').value = window.agentProfile.email;
+          document.getElementById('ag-modal-phone').value = window.agentProfile.phone;
+          m.classList.remove('hidden'); m.classList.add('flex');
+        };
+
+        window.closeAgentModal = function() {
+          document.getElementById('agent-modal').classList.add('hidden');
+          document.getElementById('agent-modal').classList.remove('flex');
+        };
+
+        window.saveAgentProfile = function() {
+          window.agentProfile.name = document.getElementById('ag-modal-name').value.trim() || "Y. Medina";
+          window.agentProfile.email = document.getElementById('ag-modal-email').value.trim() || "ymedina@gofreedomif.com";
+          window.agentProfile.phone = document.getElementById('ag-modal-phone').value.trim() || "(305) 555-0199";
+          const agentNameSpan = document.getElementById('header-agent-name');
+          if (agentNameSpan) agentNameSpan.textContent = window.agentProfile.name;
+          closeAgentModal();
+          showToast("Perfil de asesor actualizado.");
+        };
+
+        window.openDirectorModal = function() {
+          renderDirectorModalContent();
+          const m = document.getElementById('director-modal');
+          m.classList.remove('hidden'); m.classList.add('flex');
+        };
+
+        window.closeDirectorModal = function() {
+          document.getElementById('director-modal').classList.add('hidden');
+          document.getElementById('director-modal').classList.remove('flex');
+        };
+
+        window.renderDirectorModalContent = function() {
+          document.getElementById('dir-admin-user').value = portalSystemConfig.directorUser;
+          document.getElementById('dir-admin-pass').value = portalSystemConfig.directorPass;
+          document.getElementById('dir-maintenance-msg').value = portalSystemConfig.maintenanceMessage;
+
+          const statusCard = document.getElementById('dir-portal-status-card');
+          statusCard.innerHTML = `
+            <div class="bg-emerald-50 border border-emerald-300 rounded-2xl p-4 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-base">
+                  <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                  <h4 class="font-extrabold text-emerald-950 text-sm">Portal Activo y Sincronizado</h4>
+                  <p class="text-[11px] text-emerald-800">Total de agentes registrados con memoria permanente: <strong>${portalSystemConfig.agents.length}</strong></p>
+                </div>
+              </div>
+            </div>
+          `;
+
+          document.getElementById('dir-agents-count').textContent = `${portalSystemConfig.agents.length} Agentes`;
+          const tbody = document.getElementById('dir-agents-tbody');
+          if (!tbody) return;
         portalTitle: "Essentials 5000",
         portalColor: "text-sky-600 font-black tracking-tight",
         family: "Suncare • BMI-PHCS (DVP)",
