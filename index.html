@@ -15416,7 +15416,7 @@ var require_react_jsx_runtime_production = /* @__PURE__ */ __commonJSMin(((expor
 var import_jsx_runtime = (/* @__PURE__ */ __commonJSMin(((exports, module) => {
 	module.exports = require_react_jsx_runtime_production();
 })))();
-var Header = ({ currentMode, onSwitchMode, language, onToggleLanguage, currentUser, onOpenAgentModal, onOpenDirectorModal, onOpenExportModal, onLogout }) => {
+var Header = ({ currentMode, onSwitchMode, language, onToggleLanguage, currentUser, onOpenAgentModal, onOpenDirectorModal, onLogout }) => {
 	const t = i18n[language];
 	const isDirector = currentUser?.role === "director";
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("header", {
@@ -15507,12 +15507,6 @@ var Header = ({ currentMode, onSwitchMode, language, onToggleLanguage, currentUs
 						onClick: onOpenDirectorModal,
 						className: "bg-amber-400 hover:bg-amber-500 text-slate-950 font-black px-3.5 py-1.5 rounded-xl text-xs shadow-md transition flex items-center gap-1.5 animate-pulse",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Crown, { className: "w-3.5 h-3.5" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: t.directorPanel })]
-					}),
-					onOpenExportModal && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-						onClick: onOpenExportModal,
-						className: "bg-emerald-600 hover:bg-emerald-700 text-white font-black px-3 py-1.5 rounded-xl text-xs shadow-md transition flex items-center gap-1.5 border border-emerald-400/40 active:scale-95",
-						title: "Descargar código para GitHub y Vercel",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Download, { className: "w-3.5 h-3.5 text-emerald-200" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "GitHub / Vercel" })]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
 						onClick: onLogout,
@@ -16671,7 +16665,7 @@ var CompareModal = ({ isOpen, onClose, selectedPlanIds, allPlans, age, tier, lan
 	const cleanPhoneDigits = (phone) => phone.replace(/[^\d+]/g, "");
 	const telDigits = cleanPhoneDigits(agentProfile.phone);
 	const telHref = telDigits ? `tel:${telDigits}` : "#";
-	const quoteLink = typeof window !== "undefined" ? `${window.location.origin}/?age=${age}&tier=${tier}&plans=${selectedPlanIds.join(",")}&lang=${language}` : "";
+	typeof window !== "undefined" && `${window.location.origin}${age}${tier}${selectedPlanIds.join(",")}${language}`;
 	const generateComparisonWhatsAppText = () => {
 		const isEs = language === "es";
 		let text = isEs ? `👋 *Hola ${clientName.trim() || "Cliente"},*\n\nTe comparto la *Comparativa Oficial de Cobertura de Salud* personalizada para ti por parte de *Freedom Insurance Financial*:\n\n` : `👋 *Hello ${clientName.trim() || "Client"},*\n\nHere is your official customized *Health Coverage Plan Comparison* from *Freedom Insurance Financial*:\n\n`;
@@ -16931,20 +16925,6 @@ var CompareModal = ({ isOpen, onClose, selectedPlanIds, allPlans, age, tier, lan
 													" • ",
 													tierLabels[tier]
 												]
-											}),
-											quoteLink && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-												className: "mt-2 text-[10px] bg-white/15 px-3 py-1 rounded-lg text-emerald-100 flex items-center gap-1.5 backdrop-blur-sm max-w-fit",
-												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
-													"🔗 ",
-													t.viewLiveQuoteLink,
-													":"
-												] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
-													href: quoteLink,
-													target: "_blank",
-													rel: "noopener noreferrer",
-													className: "underline font-bold text-white truncate max-w-xs",
-													children: quoteLink
-												})]
 											})
 										] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 											className: "bg-white/10 backdrop-blur-md border border-white/20 p-2.5 rounded-2xl text-right",
@@ -17421,7 +17401,7 @@ var DetailsModal = ({ isOpen, onClose, plan, age, tier, language, agentProfile, 
 	const cleanPhoneDigits = (phone) => phone.replace(/[^\d+]/g, "");
 	const telDigits = cleanPhoneDigits(agentProfile.phone);
 	const telHref = telDigits ? `tel:${telDigits}` : "#";
-	const quoteLink = typeof window !== "undefined" ? `${window.location.origin}/?age=${age}&tier=${tier}&plan=${plan.id}&lang=${language}` : "";
+	typeof window !== "undefined" && `${window.location.origin}${age}${tier}${plan.id}${language}`;
 	const generateSingleWhatsAppText = () => {
 		let txt = isEs ? `👋 *Hola ${clientName.trim() || "Cliente"},*\n\nTe comparto tu propuesta oficial de *Freedom Insurance Financial*:\n\n` : `👋 *Hello ${clientName.trim() || "Client"},*\n\nHere is your official proposal from *Freedom Insurance Financial*:\n\n`;
 		txt += `━━━━━━━━━━━━━━━━━━━━\n`;
@@ -17827,20 +17807,6 @@ var DetailsModal = ({ isOpen, onClose, plan, age, tier, language, agentProfile, 
 												" • ",
 												tierLabels[tier]
 											]
-										}),
-										quoteLink && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											className: "mt-2 text-[10px] bg-white/15 px-3 py-1 rounded-lg text-emerald-100 flex items-center gap-1.5 backdrop-blur-sm max-w-fit",
-											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", { children: [
-												"🔗 ",
-												t.viewLiveQuoteLink,
-												":"
-											] }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
-												href: quoteLink,
-												target: "_blank",
-												rel: "noopener noreferrer",
-												className: "underline font-bold text-white truncate max-w-xs",
-												children: quoteLink
-											})]
 										})
 									] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 										className: "bg-white text-brandBlue p-3 rounded-2xl text-right shadow-md",
@@ -18060,7 +18026,7 @@ var DetailsModal = ({ isOpen, onClose, plan, age, tier, language, agentProfile, 
 	});
 };
 // src/components/DirectorModal.tsx
-var DirectorModal = ({ isOpen, onClose, portalConfig, agents, language, onUpdateConfig, onSaveAgent, onDeleteAgent, onToggleAgentStatus, onRefreshAgents, onShowToast }) => {
+var DirectorModal = ({ isOpen, onClose, portalConfig, agents, language, onUpdateConfig, onSaveAgent, onDeleteAgent, onToggleAgentStatus, onRefreshAgents, onOpenExportModal, onShowToast }) => {
 	const [searchTerm, setSearchTerm] = (0, import_react.useState)("");
 	const [visiblePasswords, setVisiblePasswords] = (0, import_react.useState)({});
 	const [editingId, setEditingId] = (0, import_react.useState)(null);
@@ -18318,6 +18284,12 @@ var DirectorModal = ({ isOpen, onClose, portalConfig, agents, language, onUpdate
 												className: "bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold px-3 py-1.5 rounded-xl text-xs transition flex items-center gap-1.5 shadow-sm cursor-pointer",
 												title: "Exportar lista de agentes",
 												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Download, { className: "w-3.5 h-3.5 text-slate-500" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: t.exportCSV })]
+											}),
+											onOpenExportModal && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
+												onClick: onOpenExportModal,
+												className: "bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3 py-1.5 rounded-xl text-xs transition flex items-center gap-1.5 shadow-sm cursor-pointer",
+												title: "Exportar código para GitHub y Vercel (Exclusivo Directora)",
+												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Download, { className: "w-3.5 h-3.5 text-emerald-200" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { children: "GitHub / Vercel" })]
 											})
 										]
 									})]
@@ -19617,6 +19589,46 @@ var AIAssistant = ({ language, allPlans, currentAge, currentTier }) => {
 	});
 };
 // src/App.tsx
+var DEFAULT_SYSTEM_AGENTS = [
+	{
+		id: "ag-director",
+		name: "Yenniree Medina (Directora)",
+		username: "ymedina@gofreedomif.com",
+		password: "Freedomif18",
+		email: "ymedina@gofreedomif.com",
+		phone: "(305) 555-0199",
+		active: true,
+		role: "director",
+		registeredAt: "2025-01-01T08:00:00.000Z",
+		lastLogin: "2026-11-03T21:23:57.177Z",
+		notes: "Directora General de Agencia"
+	},
+	{
+		id: "ag-1",
+		name: "Carlos Ruiz",
+		username: "agente1",
+		password: "1234",
+		email: "cruiz@freedominsurance.com",
+		phone: "(786) 555-0100",
+		active: true,
+		role: "agent",
+		registeredAt: "2026-01-10T14:20:00.000Z",
+		lastLogin: "2026-11-03T21:23:57.177Z",
+		notes: "Asesor Comercial"
+	},
+	{
+		id: "ag-1793741053823-uhuw",
+		name: "Sofia Navarro",
+		username: "snavarro",
+		password: "password2026",
+		email: "snavarro@freedominsurance.com",
+		phone: "(786) 555-8899",
+		active: true,
+		role: "agent",
+		registeredAt: "2026-11-03T21:24:13.823Z",
+		lastLogin: "2026-11-03T21:24:13.823Z"
+	}
+];
 function App() {
 	const [language, setLanguage] = (0, import_react.useState)(() => {
 		try {
@@ -19651,7 +19663,32 @@ function App() {
 		directorEmail: "ymedina@gofreedomif.com",
 		directorPhone: "(305) 555-0199"
 	});
-	const [agentsList, setAgentsList] = (0, import_react.useState)([]);
+	const [agentsList, setAgentsList] = (0, import_react.useState)(() => {
+		try {
+			const saved1 = localStorage.getItem("freedom_portal_agents");
+			const saved2 = localStorage.getItem("freedom_local_agents");
+			const list = [...DEFAULT_SYSTEM_AGENTS];
+			const appendUnique = (raw) => {
+				if (!raw) return;
+				const parsed = JSON.parse(raw);
+				if (Array.isArray(parsed)) parsed.forEach((item) => {
+					if (item && item.username) {
+						const idx = list.findIndex((x) => x.username.toLowerCase() === item.username.toLowerCase() || item.id && x.id === item.id);
+						if (idx >= 0) list[idx] = {
+							...list[idx],
+							...item
+						};
+						else list.push(item);
+					}
+				});
+			};
+			appendUnique(saved1);
+			appendUnique(saved2);
+			return list;
+		} catch {
+			return DEFAULT_SYSTEM_AGENTS;
+		}
+	});
 	const [age, setAge] = (0, import_react.useState)(35);
 	const [gender, setGender] = (0, import_react.useState)("F");
 	const [tier, setTier] = (0, import_react.useState)("emp");
@@ -19705,11 +19742,42 @@ function App() {
 			if (res.ok) {
 				const data = await res.json();
 				if (data.portalSystemConfig) setPortalConfig(data.portalSystemConfig);
-				if (Array.isArray(data.agents)) setAgentsList(data.agents);
+				if (Array.isArray(data.agents) && data.agents.length > 0) {
+					setAgentsList((prev) => {
+						const merged = [...data.agents];
+						prev.forEach((localAg) => {
+							if (!merged.some((m) => m.username.toLowerCase() === localAg.username.toLowerCase())) merged.push(localAg);
+						});
+						try {
+							localStorage.setItem("freedom_portal_agents", JSON.stringify(merged));
+							localStorage.setItem("freedom_local_agents", JSON.stringify(merged));
+						} catch {}
+						return merged;
+					});
+					return;
+				}
 			}
 		} catch (err) {
 			console.warn("Server sync fallback to local:", err);
 		}
+		try {
+			const raw = localStorage.getItem("freedom_portal_agents") || localStorage.getItem("freedom_local_agents");
+			if (raw) {
+				const parsed = JSON.parse(raw);
+				if (Array.isArray(parsed) && parsed.length > 0) setAgentsList((prev) => {
+					const combined = [...DEFAULT_SYSTEM_AGENTS];
+					parsed.forEach((ag) => {
+						const idx = combined.findIndex((x) => x.username.toLowerCase() === ag.username.toLowerCase() || x.id === ag.id);
+						if (idx >= 0) combined[idx] = {
+							...combined[idx],
+							...ag
+						};
+						else combined.push(ag);
+					});
+					return combined;
+				});
+			}
+		} catch {}
 	};
 	(0, import_react.useEffect)(() => {
 		fetchPortalData();
@@ -19762,38 +19830,81 @@ function App() {
 		}
 	};
 	const handleSaveAgent = async (agentData) => {
-		const res = await fetch("/api/director/agent", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(agentData)
+		try {
+			if ((await fetch("/api/director/agent", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(agentData)
+			})).ok) {
+				await fetchPortalData();
+				return;
+			}
+		} catch (e) {}
+		setAgentsList((prev) => {
+			let updated;
+			if (agentData.id) updated = prev.map((a) => a.id === agentData.id ? {
+				...a,
+				...agentData
+			} : a);
+			else {
+				const newAg = {
+					id: "ag-" + Date.now(),
+					name: agentData.name || "",
+					username: agentData.username || "",
+					password: agentData.password || "",
+					email: agentData.email || "",
+					phone: agentData.phone || "",
+					active: true,
+					role: "agent",
+					registeredAt: (/* @__PURE__ */ new Date()).toISOString(),
+					notes: agentData.notes
+				};
+				updated = [...prev, newAg];
+			}
+			try {
+				localStorage.setItem("freedom_portal_agents", JSON.stringify(updated));
+				localStorage.setItem("freedom_local_agents", JSON.stringify(updated));
+			} catch {}
+			return updated;
 		});
-		if (!res.ok) {
-			const err = await res.json();
-			throw new Error(err.error || "Error");
-		}
-		await fetchPortalData();
 	};
 	const handleDeleteAgent = async (id) => {
-		if ((await fetch(`/api/director/agent/${id}`, { method: "DELETE" })).ok) {
-			setAgentsList((prev) => prev.filter((a) => a.id !== id));
-			showToast(isEs ? "Agente eliminado" : "Agent deleted");
-		}
+		try {
+			await fetch(`/api/director/agent/${id}`, { method: "DELETE" });
+		} catch (e) {}
+		setAgentsList((prev) => {
+			const updated = prev.filter((a) => a.id !== id);
+			try {
+				localStorage.setItem("freedom_portal_agents", JSON.stringify(updated));
+				localStorage.setItem("freedom_local_agents", JSON.stringify(updated));
+			} catch {}
+			return updated;
+		});
+		showToast(isEs ? "Agente eliminado" : "Agent deleted");
 	};
 	const handleToggleAgentStatus = async (id, active) => {
-		if ((await fetch("/api/director/agent-status", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				id,
-				active
-			})
-		})).ok) {
-			setAgentsList((prev) => prev.map((a) => a.id === id ? {
+		try {
+			await fetch("/api/director/agent-status", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					id,
+					active
+				})
+			});
+		} catch (e) {}
+		setAgentsList((prev) => {
+			const updated = prev.map((a) => a.id === id ? {
 				...a,
 				active
-			} : a));
-			showToast(active ? isEs ? "Acceso concedido" : "Access granted" : isEs ? "Acceso bloqueado" : "Access blocked");
-		}
+			} : a);
+			try {
+				localStorage.setItem("freedom_portal_agents", JSON.stringify(updated));
+				localStorage.setItem("freedom_local_agents", JSON.stringify(updated));
+			} catch {}
+			return updated;
+		});
+		showToast(active ? isEs ? "Acceso concedido" : "Access granted" : isEs ? "Acceso bloqueado" : "Access blocked");
 	};
 	const handleSaveProfile = async (name, email, phone) => {
 		if (!currentUser) return;
@@ -20115,7 +20226,6 @@ function App() {
 					fetchPortalData();
 					setIsDirectorModalOpen(true);
 				},
-				onOpenExportModal: () => setIsExportModalOpen(true),
 				onLogout: handleLogout
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("main", {
@@ -20353,6 +20463,7 @@ function App() {
 				onDeleteAgent: handleDeleteAgent,
 				onToggleAgentStatus: handleToggleAgentStatus,
 				onRefreshAgents: fetchPortalData,
+				onOpenExportModal: () => setIsExportModalOpen(true),
 				onShowToast: showToast
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LoginModal, {
